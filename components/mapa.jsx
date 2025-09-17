@@ -15,7 +15,7 @@ export default function Map({ setOpcao }) {
   const [region, setRegion] = useState(initialRegion);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const LAT_MIN = -3.9;
+  const LAT_MIN = -3.9; //teste
   const LAT_MAX = -3.5;
   const LON_MIN = -38.7;
   const LON_MAX = -38.3;
