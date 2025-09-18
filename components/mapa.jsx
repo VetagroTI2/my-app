@@ -35,7 +35,7 @@ export default function Map({ setOpcao }) {
 
   useEffect(() => {
     async function carregar() {
-      const data = await getAllDocs();
+      const data = await getAllDocs("entidade");
       setOngs(data);
     }
     carregar();
@@ -48,28 +48,25 @@ export default function Map({ setOpcao }) {
         region={region}
         onRegionChangeComplete={handleRegionChange}
       >
-        {/* Marcador fixo de teste */}
-        <Marker
-          coordinate={{ latitude: -3.764301, longitude: -38.486617 }}
-          onPress={() => setModalVisible(true)}
-        />
-
-        {/* Marcadores vindos do Firestore */}
-        {ongs.map((ong) => (
-          <Marker
-            key={ong.id}
-            coordinate={{
-              latitude: ong.geoloc.latitude,
-              longitude: ong.geoloc.longitude,
-            }}
-            onPress={() => {
-              setOngSelecionada(ong);
-              setModalVisible(true);
-            }}
-          />
-        ))}
+        {ongs.map((ong) => {
+          if (ong.geoloc && ong.geoloc.latitude != null && ong.geoloc.longitude != null) {
+            return (
+              <Marker
+                key={ong.id}
+                coordinate={{
+                  latitude: ong.geoloc.latitude,
+                  longitude: ong.geoloc.longitude,
+                }}
+                onPress={() => {
+                  setOngSelecionada(ong);
+                  setModalVisible(true);
+                }}
+              />
+            );
+          }
+          return null; // não renderiza nada se não tiver coordenadas
+        })}
       </MapView>
-
       {/* Modal de detalhes */}
       <Modal
         animationType="slide"

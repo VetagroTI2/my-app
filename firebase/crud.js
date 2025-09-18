@@ -1,7 +1,7 @@
 // firestoreCrud.js
 import {
   collection,
-  addDoc,
+  setDoc,
   getDocs,
   updateDoc,
   deleteDoc,
@@ -9,22 +9,26 @@ import {
 } from "firebase/firestore";
 import { db } from "./service";
 
-const COLLECTION_NAME = "entidade"; // sua coleção no Firestore
+// CREATE adddoc
 
-// CREATE
-export async function createDoc(data) {
+export async function createDoc(data, docId, collectionName) {
   try {
-    const docRef = await addDoc(collection(db, COLLECTION_NAME), data);
-    return { id: docRef.id, ...data };
+    // Cria referência do documento usando o ID e a coleção passados
+    const docRef = doc(db, collectionName, docId);
+
+    // Cria ou atualiza o documento, mantendo campos existentes com merge: true
+    await setDoc(docRef, data, { merge: true });
+
+    return { id: docId, ...data };
   } catch (error) {
-    console.error("Erro ao criar documento:", error);
+    console.error("Erro ao criar/atualizar documento:", error);
   }
 }
 
 // READ (pegar todos os documentos)
-export async function getAllDocs() {
+export async function getAllDocs(collectionName) {
   try {
-    const snapshot = await getDocs(collection(db, COLLECTION_NAME));
+    const snapshot = await getDocs(collection(db, collectionName));
     let docs = [];
     snapshot.forEach((doc) => {
       docs.push({ id: doc.id, ...doc.data() });
@@ -36,9 +40,9 @@ export async function getAllDocs() {
 }
 
 // UPDATE
-export async function updateDocById(id, newData) {
+export async function updateDocById(collectionName, id, newData) {
   try {
-    const docRef = doc(db, COLLECTION_NAME, id);
+    const docRef = doc(db, collectionName, id);
     await updateDoc(docRef, newData);
     return true;
   } catch (error) {

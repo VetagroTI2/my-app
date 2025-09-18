@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useAuth } from '../context/authContext'
 import ToggleButton from './elements/authToggleButton'
 import AuthModal from './elements/modalAuth'
+import { createDoc } from '../firebase/crud'
 
 export default function Perfil() {
 
@@ -13,11 +14,70 @@ export default function Perfil() {
 
     const [openModal, setOpenModal] = useState(false);
 
-
+    //*************** VARIAVEIS DE ENTRADA 
     const [emailSignIn, setEmailSignIn] = useState("")
     const [passSignIn, setPassSignIn] = useState("")
 
-    const [selectedId, setSelectedId] = useState("doador");
+    //***************VARIAVEIS DE REGISTROS DE USUARIO
+    /**/ const [campoTipo, setCampoTipo] = useState("doador")
+    /**/ const [campoBairro, setCampoBairro] = useState("")
+    /**/ const [campoCep, setCampoCep] = useState("")
+    /**/ const [campoComp, setCampoComp] = useState("")
+    /**/ const [campoCpfcnpj, setCampoCpfcnpj] = useState("")
+    /**/ const [campoEmail, setCampoEmail] = useState("")
+    /**/ const [campoEndereco, setCampoEndereco] = useState("")
+    /**/ const [campoNome, setCampoNome] = useState("")
+    /**/ const [campoNumeroEnd, setCampoNumeroEnd] = useState("")
+    /**/ const [campoSenha, setCampoSenha] = useState("")
+    /**/ const [campoSenhaConf, setCampoSenhaConf] = useState("")
+    /*************************************************************/
+
+    async function sendDataRegister() {
+        const newUser = {
+            campoTipo,
+            campoEmail,
+            campoSenha,
+            campoSenhaConf
+        };
+
+        const newInfoUsers = {
+            bairro: campoBairro,
+            cep: campoCep,
+            comp: campoComp,
+            cpfcnpj: campoCpfcnpj,
+            email: campoEmail,
+            endereco: campoEndereco,
+            nome: campoNome,
+            numeroEnd: campoNumeroEnd,
+        };
+
+        // Valida se todas as informações obrigatórias foram preenchidas
+        const allUserInfoFilled = Object.values(newInfoUsers).every(value => value);
+        if (!allUserInfoFilled) {
+            console.log("Preencha todos os campos obrigatórios!");
+            return; // Sai da função se faltar algum campo
+        }
+
+        // Valida se as senhas conferem
+        if (newUser.campoSenha !== newUser.campoSenhaConf) {
+            console.log("As senhas não correspondem!");
+            return;
+        }
+
+        try {
+            // Registra o usuário
+            const uid = await registrar(newUser.campoEmail, newUser.campoSenha);
+            console.log("Usuário registrado com sucesso! UID:", uid);
+
+            // Cria o documento no Firestore
+            await createDoc(newInfoUsers, uid, newUser.campoTipo);
+            console.log("Dados adicionais salvos com sucesso!");
+            
+        } catch (error) {
+            console.error("Erro ao registrar usuário ou salvar dados:", error);
+        }
+    }
+
 
     if (status === "online") {
         return (
@@ -87,58 +147,70 @@ export default function Perfil() {
                         <Text style={styles.label}>Você é?</Text>
                         <ToggleButton
                             label="Doador"
-                            selected={selectedId === "doador"}
-                            onSelect={() => setSelectedId("doador")}
+                            selected={campoTipo === "doador"}
+                            onSelect={() => setCampoTipo("doador")}
                         />
                         <ToggleButton
                             label="Entidade/ONG"
-                            selected={selectedId === "entidade"}
-                            onSelect={() => setSelectedId("entidade")}
+                            selected={campoTipo === "entidade"}
+                            onSelect={() => setCampoTipo("entidade")}
                         />
                         <Text style={styles.label}>CPF ou CNPJ</Text>
                         <TextInput
                             style={styles.input}
+                            onChangeText={setCampoCpfcnpj}
                         />
                         <Text style={styles.label}>Nome completo ou Razão Social</Text>
                         <TextInput
                             style={styles.input}
+                            onChangeText={setCampoNome}
                         />
                         <Text style={styles.label}>CEP</Text>
                         <TextInput
                             style={styles.input}
+                            onChangeText={setCampoCep}
                         />
                         <Text style={styles.label}>Endereço</Text>
                         <TextInput
                             style={styles.input}
+                            onChangeText={setCampoEndereco}
                         />
                         <Text style={styles.label}>Nº</Text>
                         <TextInput
                             style={styles.input}
+                            onChangeText={setCampoNumeroEnd}
                         />
                         <Text style={styles.label}>Complemento</Text>
                         <TextInput
                             style={styles.input}
+                            onChangeText={setCampoComp}
                         />
                         <Text style={styles.label}>Bairro</Text>
                         <TextInput
                             style={styles.input}
+                            onChangeText={setCampoBairro}
                         />
                         <Text style={styles.label}>E-mail</Text>
                         <TextInput
                             style={styles.input}
+                            onChangeText={setCampoEmail}
                         />
                         <Text style={styles.label}>Senha</Text>
                         <TextInput
                             style={styles.input}
+                            onChangeText={setCampoSenha}
+                            secureTextEntry 
                         />
                         <Text style={styles.label}>Confirmar Senha</Text>
                         <TextInput
                             style={styles.input}
+                            onChangeText={setCampoSenhaConf}
+                            secureTextEntry 
                         />
-                        <TouchableOpacity style={styles.button} onPress={() => null}>
+                        <TouchableOpacity style={styles.button} onPress={() => sendDataRegister()}>
                             <Text style={styles.buttonText}>Cadastrar</Text>
                         </TouchableOpacity>
-                    </ScrollView> 
+                    </ScrollView>
                 </View>
             </View>
         )
@@ -155,6 +227,7 @@ const styles = StyleSheet.create({
   },
   form: {
     width: "100%",
+    maxHeight: "89%",
     marginTop: 20,  // espaçamento depois do topo
     marginBottom: 20,
   },

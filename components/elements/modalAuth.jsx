@@ -1,7 +1,36 @@
 import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from "react-native";
+import { useState } from "react"
+import { GeoPoint } from "firebase/firestore";
+import { updateDocById } from "../../firebase/crud";
+import { useAuth } from "../../context/authContext";
 
 export default function AuthModal({ visible, onClose }) {
-    
+
+  const { user } = useAuth()
+
+  //***************VARIAVEIS DE ATUALIZAÇÃO DE USUÁRIO DE USUARIO
+  /**/ const [campoLatitude, setCampoLatitude] = useState("")
+  /**/ const [campoLongitude, setCampoLongitude] = useState("")
+  /**/ const [campoHorario, setCampoHorario] = useState("")
+  /**/ const [campoTamanho, setCampoTamanho] = useState("")
+  /**/ const [campoDoacoes, setCampoDoacoes] = useState("")
+  /*************************************************************/
+
+  async function updateEntidade() {
+    let geo = new GeoPoint(campoLatitude, campoLongitude)
+
+    const data = {
+      geoloc: geo,
+      horario: campoHorario,
+      tamanho: campoTamanho,
+      doacao: campoDoacoes,
+    }
+
+    await updateDocById("entidade", user.uid, data).then(
+      (param) => param ? console.log("Atualizado!") : null
+    )
+  }
+
     return (
         <Modal
             animationType="slide"
@@ -11,33 +40,43 @@ export default function AuthModal({ visible, onClose }) {
             >
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContent}>
-                  <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                      <Text style={styles.closeText}>X</Text>
-                  </TouchableOpacity>
                   <ScrollView>
                     <Text style={styles.label}>Latitude</Text>
                     <TextInput
                         style={styles.input}
+                        onChangeText={setCampoLatitude}
                     />
                     <Text style={styles.label}>Longitude</Text>
                     <TextInput
                         style={styles.input}
+                        onChangeText={setCampoLongitude}
                     />
                     <Text style={styles.label}>Horario de Func.</Text>
                     <TextInput
                         style={styles.input}
+                        onChangeText={setCampoHorario}
                     />
                     <Text style={styles.label}>Tamanho</Text>
                     <TextInput
                         style={styles.input}
+                        onChangeText={setCampoTamanho}
                     />
                     <Text style={styles.label}>Aceito doações de</Text>
                     <TextInput
                         style={styles.input}
+                        onChangeText={setCampoDoacoes}
+                    />
+                                        <Text style={styles.label}>Aceito doações de</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setCampoDoacoes}
                     />
                   </ScrollView>
-                  <TouchableOpacity style={styles.QueroDoarButton} onPress={() => console.log("modalAuth.jsx: Dados Atualizados!")}>
+                  <TouchableOpacity style={styles.QueroDoarButton} onPress={() => updateEntidade()}>
                       <Text style={styles.QueroDoarText}>Atualizar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.QueroDoarButton} onPress={onClose}>
+                      <Text style={styles.QueroDoarText}>Fechar</Text>
                   </TouchableOpacity>
                 </View>
             </View>
@@ -54,6 +93,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "80%",
+    maxHeight: "70%",
     backgroundColor: "white",
     padding: 20,
     borderRadius: 12,
@@ -63,17 +103,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
-  },
-  closeButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    padding: 5,
-  },
-  closeText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
   },
   QueroDoarButton: {
     marginTop: 20,

@@ -4,10 +4,11 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } f
 // Registrar usuário
 export const registrar = async (email, senha) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
-    console.log("Usuário criado:", userCredential.user);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, senha)
+    console.log("Usuário criado:", userCredential.user)
+    return userCredential.user.uid
   } catch (error) {
-    console.log("Erro:", error.message);
+    console.log("Erro:", error.message)
   }
 };
 
