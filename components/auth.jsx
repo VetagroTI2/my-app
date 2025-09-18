@@ -5,6 +5,7 @@ import { useAuth } from '../context/authContext'
 import ToggleButton from './elements/authToggleButton'
 import AuthModal from './elements/modalAuth'
 import { createDoc } from '../firebase/crud'
+import { Picker } from '@react-native-picker/picker'
 
 export default function Perfil() {
 
@@ -49,6 +50,7 @@ export default function Perfil() {
             endereco: campoEndereco,
             nome: campoNome,
             numeroEnd: campoNumeroEnd,
+            tipo: campoTipo
         };
 
         // Valida se todas as informações obrigatórias foram preenchidas
@@ -66,7 +68,7 @@ export default function Perfil() {
 
         try {
             // Registra o usuário
-            const uid = await registrar(newUser.campoEmail, newUser.campoSenha);
+            const uid = await registrar(newUser.campoEmail, newUser.campoSenha, newUser.campoTipo);
             console.log("Usuário registrado com sucesso! UID:", uid);
 
             // Cria o documento no Firestore
@@ -78,7 +80,6 @@ export default function Perfil() {
         }
     }
 
-
     if (status === "online") {
         return (
         <View style={styles.container}>
@@ -88,6 +89,10 @@ export default function Perfil() {
                 <Text style={styles.info}>Email: {user?.email}</Text>
 
                 <TouchableOpacity style={styles.button} onPress={() => setOpenModal(true)}>
+                    <Text style={styles.buttonText}>Gravar Ponto</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button} onPress={() => null}>
                     <Text style={styles.buttonText}>Atualizar Dados</Text>
                 </TouchableOpacity>
 
@@ -115,7 +120,6 @@ export default function Perfil() {
                         keyboardType="email-address"
                         autoCapitalize="none"
                     />
-
                     <Text style={styles.label}>Senha</Text>
                     <TextInput
                         onChangeText={setPassSignIn} 
@@ -123,7 +127,11 @@ export default function Perfil() {
                         placeholder="Digite sua senha"
                         secureTextEntry
                     />
-
+                    <Picker>
+                        <Picker.Item label="Selecione o tipo" value=""/>
+                        <Picker.Item label="Doador" value="Doador"/>
+                        <Picker.Item label="Entidade/ONG" value="Entidade/ONG"/>
+                    </Picker>
                     <TouchableOpacity style={styles.button} onPress={() => login(emailSignIn, passSignIn)}>
                         <Text style={styles.buttonText}>Entrar</Text>
                     </TouchableOpacity>

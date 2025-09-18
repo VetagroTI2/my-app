@@ -6,6 +6,7 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  getDoc
 } from "firebase/firestore";
 import { db } from "./service";
 
@@ -36,6 +37,23 @@ export async function getAllDocs(collectionName) {
     return docs;
   } catch (error) {
     console.error("Erro ao buscar documentos:", error);
+  }
+}
+
+export async function getDocById(collectionName, id) {
+  try {
+    const docRef = doc(db, collectionName, id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    } else {
+      console.log("Documento não encontrado!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Erro ao buscar documento:", error);
+    return null;
   }
 }
 

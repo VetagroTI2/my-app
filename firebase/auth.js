@@ -16,7 +16,7 @@ export const registrar = async (email, senha) => {
 export const login = async (email, senha) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, senha);
-    console.log("Logado:", userCredential.user.uid);
+    console.log("Logado:", userCredential.user);
   } catch (error) {
     console.log("Erro:", error.message);
   }
