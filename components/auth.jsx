@@ -78,6 +78,10 @@ export default function Perfil() {
     } else if (status === "offline" && tipoFormulario === "Registrar") {
         return (
             <View style={styles.container}>
+                <Text style={styles.signInText}>
+                    Já possui um cadastro?
+                    <Text style={styles.signInLink} onPress={() => setTipoFormulario("Entrar")}> Clique aqui</Text>
+                </Text>
                 <View style={styles.form}>
                     <ScrollView>
                         <Text style={styles.label}>Você é?</Text>
@@ -136,56 +140,67 @@ export default function Perfil() {
                         </TouchableOpacity>
                     </ScrollView> 
                 </View>
-                <Text style={styles.registerText}>
-                    Já possui um cadastro?
-                    <Text style={styles.registerLink} onPress={() => setTipoFormulario("Entrar")}> Clique aqui</Text>
-                </Text>
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-        backgroundColor: "#fff"
-    },
-    form: {
-        width: "100%",
-        marginBottom: 20,
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: "bold",
-        marginBottom: 5,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        padding: 10,
-        marginBottom: 15,
-    },
-    button: {
-        backgroundColor: "#000000",
-        padding: 15,
-        borderRadius: 8,
-        alignItems: "center",
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    registerText: {
-        fontSize: 14,
-        color: "#333",
-    },
-    registerLink: {
-        color: "#000000",
-        fontWeight: "bold",
-    },
-})
+  container: {
+    flex: 1,
+    justifyContent: "flex-start", // começa do topo (já respeitado pelo SafeAreaView)
+    alignItems: "center",
+    paddingHorizontal: 20, // só padding lateral
+    backgroundColor: "#fff",
+  },
+  form: {
+    width: "100%",
+    marginTop: 20,  // espaçamento depois do topo
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 6,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: "#000000",
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  registerText: {
+    fontSize: 14,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 15,
+  },
+  registerLink: {
+    color: "#000000",
+    fontWeight: "bold",
+  },
+  signInText: {
+    fontSize: 14,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 15,
+  },
+  signInLink: {
+    color: "#000000",
+    fontWeight: "bold",
+  },
+});

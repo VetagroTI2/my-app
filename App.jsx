@@ -8,6 +8,8 @@ import Header from './components/header.jsx'
 import Perfil from './components/auth.jsx'
 
 import { AuthProvider } from './context/authContext.jsx'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import HeaderNav from './components/headerNav.jsx'
 
 export default function App() {
 
@@ -15,46 +17,40 @@ export default function App() {
 
   if (opcao === "Doar") {
     return (
-      <View style={styles.container}>
-        <Header setOpcao={setOpcao}/>
-      </View>
+      <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
+        <HeaderNav setOpcao={setOpcao}/>
+      </SafeAreaView>
     )
   }
 
   if (opcao === "opcao2") {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
         <Header setOpcao={setOpcao}/>
         <Menu setOpcao={setOpcao}/>
-      </View>
+      </SafeAreaView>
     )
   }
 
   if (opcao === "Perfil") {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
         <AuthProvider>
           <Header/>
           <Perfil/>
           <Menu setOpcao={setOpcao}/>
         </AuthProvider>
-      </View>
+      </SafeAreaView>
     )
   }
 
   if (opcao === "home") {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
         <SearchBar/>
         <Mapa setOpcao={setOpcao}/>
         <Menu setOpcao={setOpcao}/>
-      </View>
+      </SafeAreaView>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-});

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native'
 export default function Header(){
     return (
         <View style={styles.container}>
-            <View style={styles.searchbox}>
+            <View style={styles.title}>
               <Text>MAPA DA SOLIDARIEDADE</Text>
             </View>
         </View>
@@ -12,11 +12,12 @@ export default function Header(){
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "flex-start",
-    alignItems: "center",          
-    paddingTop: 32,                
+    width: "100%",
+    alignItems: "center",
+    marginTop: 10,   // espaçamento suave depois do safe area
+    marginBottom: 10 // garante respiro antes do mapa
   },
-  searchbox: {
+  title: {
     width: "100%",
     flexDirection: "row",              
     alignItems: "center",

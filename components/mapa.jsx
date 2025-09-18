@@ -1,21 +1,23 @@
-import { StyleSheet, View, Dimensions, Modal, Text, TouchableOpacity  } from "react-native";
-import { useState, useEffect } from 'react'
-import MapView, { Marker  } from "react-native-maps";
+import { StyleSheet, View, Modal, Text, TouchableOpacity } from "react-native";
+import { useState, useEffect } from "react";
+import MapView, { Marker } from "react-native-maps";
 import { getAllDocs } from "../firebase/crud";
 
 export default function Map({ setOpcao }) {
-  // Região inicial do mapa (Fortaleza - CE)
   const initialRegion = {
     latitude: -3.71722,
     longitude: -38.54306,
-    latitudeDelta: 0.2,   // zoom vertical
-    longitudeDelta: 0.2,  // zoom horizontal
+    latitudeDelta: 0.2,
+    longitudeDelta: 0.2,
   };
 
   const [region, setRegion] = useState(initialRegion);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const LAT_MIN = -3.9; //teste
+  const [ongs, setOngs] = useState([]);
+  const [ongSelecionada, setOngSelecionada] = useState(null);
+
+  const LAT_MIN = -3.9;
   const LAT_MAX = -3.5;
   const LON_MIN = -38.7;
   const LON_MAX = -38.3;
@@ -23,20 +25,17 @@ export default function Map({ setOpcao }) {
   const handleRegionChange = (newRegion) => {
     let latitude = Math.min(Math.max(newRegion.latitude, LAT_MIN), LAT_MAX);
     let longitude = Math.min(Math.max(newRegion.longitude, LON_MIN), LON_MAX);
-    
+
     setRegion({
       ...newRegion,
       latitude,
       longitude,
-    })
-  }
-
-  const [ongs, setOngs] = useState([]);
-  const [ongSelecionada, setOngSelecionada] = useState(null);
+    });
+  };
 
   useEffect(() => {
     async function carregar() {
-      const data = await getAllDocs(); // retorna todos os docs da coleção
+      const data = await getAllDocs();
       setOngs(data);
     }
     carregar();
@@ -44,25 +43,34 @@ export default function Map({ setOpcao }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.mapWrapper}>
-        <MapView
-          style={styles.map}
-          region={region}
-          onRegionChangeComplete={handleRegionChange}
-        >
+      <MapView
+        style={styles.map}
+        region={region}
+        onRegionChangeComplete={handleRegionChange}
+      >
+        {/* Marcador fixo de teste */}
+        <Marker
+          coordinate={{ latitude: -3.764301, longitude: -38.486617 }}
+          onPress={() => setModalVisible(true)}
+        />
+
+        {/* Marcadores vindos do Firestore */}
+        {ongs.map((ong) => (
           <Marker
-            coordinate={{ latitude: -3.764301, longitude: -38.486617 }}
-            onPress={() => setModalVisible(true)}
+            key={ong.id}
+            coordinate={{
+              latitude: ong.geoloc.latitude,
+              longitude: ong.geoloc.longitude,
+            }}
+            onPress={() => {
+              setOngSelecionada(ong);
+              setModalVisible(true);
+            }}
           />
-          {ongs.map((ong) =>
-            <Marker
-              key={ong.id}
-              coordinate={{latitude:  ong.geoloc.latitude, longitude: ong.geoloc.longitude}}
-              onPress={() => setModalVisible(true)}
-            />
-          )}
-        </MapView>
-      </View>
+        ))}
+      </MapView>
+
+      {/* Modal de detalhes */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -71,39 +79,42 @@ export default function Map({ setOpcao }) {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
               <Text style={styles.closeText}>X</Text>
             </TouchableOpacity>
-            <Text style={styles.modalTitle}>Nome da ONG</Text>
-            <Text>Informações detalhadas sobre a ONG aqui...</Text>
-            <TouchableOpacity style={styles.QueroDoarButton} onPress={() => setOpcao("Doar")}>
+
+            <Text style={styles.modalTitle}>
+              {ongSelecionada?.nome || "Nome da ONG"}
+            </Text>
+            <Text>
+              {ongSelecionada?.descricao ||
+                "Informações detalhadas sobre a ONG aqui..."}
+            </Text>
+
+            <TouchableOpacity
+              style={styles.QueroDoarButton}
+              onPress={() => setOpcao("Doar")}
+            >
               <Text style={styles.QueroDoarText}>Quero Doar!</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
     </View>
-  )
+  );
 }
-
-const { height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: 10,
-  },
-  mapWrapper: {
-    width: "100%",
-    height: height * 0.82, // 60% da altura da tela
-    overflow: "hidden",
+    flex: 1, // ocupa todo o espaço disponível
   },
   map: {
-    width: "100%",
-    height: "100%",
+    flex: 1, // faz o mapa se ajustar dinamicamente
   },
-    modalOverlay: {
+  modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
