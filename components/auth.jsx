@@ -9,15 +9,17 @@ import { Picker } from '@react-native-picker/picker'
 
 export default function Perfil() {
 
-    const { user, status } = useAuth()
+    const { user, status, grupo } = useAuth()
 
     const [tipoFormulario, setTipoFormulario] = useState("Entrar")
 
     const [openModal, setOpenModal] = useState(false);
 
     //*************** VARIAVEIS DE ENTRADA 
-    const [emailSignIn, setEmailSignIn] = useState("")
-    const [passSignIn, setPassSignIn] = useState("")
+    /**/ const [emailSignIn, setEmailSignIn] = useState("")
+    /**/ const [passSignIn, setPassSignIn] = useState("")
+    /**/ const [selectTipo, setSelectTipo] = useState("")
+    /*****************************************************/ 
 
     //***************VARIAVEIS DE REGISTROS DE USUARIO
     /**/ const [campoTipo, setCampoTipo] = useState("doador")
@@ -87,11 +89,11 @@ export default function Perfil() {
                 <Text style={styles.label}>Usuário logado ✅</Text>
                 <Text style={styles.info}>UID: {user?.uid}</Text>
                 <Text style={styles.info}>Email: {user?.email}</Text>
-
+                { grupo === "Entidade/ONG" ?
                 <TouchableOpacity style={styles.button} onPress={() => setOpenModal(true)}>
                     <Text style={styles.buttonText}>Gravar Ponto</Text>
                 </TouchableOpacity>
-
+                :null}
                 <TouchableOpacity style={styles.button} onPress={() => null}>
                     <Text style={styles.buttonText}>Atualizar Dados</Text>
                 </TouchableOpacity>
@@ -127,12 +129,12 @@ export default function Perfil() {
                         placeholder="Digite sua senha"
                         secureTextEntry
                     />
-                    <Picker>
+                    <Picker selectedValue={selectTipo} onValueChange={(itemValue) => setSelectTipo(itemValue)}>
                         <Picker.Item label="Selecione o tipo" value=""/>
                         <Picker.Item label="Doador" value="Doador"/>
                         <Picker.Item label="Entidade/ONG" value="Entidade/ONG"/>
                     </Picker>
-                    <TouchableOpacity style={styles.button} onPress={() => login(emailSignIn, passSignIn)}>
+                    <TouchableOpacity style={styles.button} onPress={() => selectTipo != "" ? login(emailSignIn, passSignIn, selectTipo) : null}>
                         <Text style={styles.buttonText}>Entrar</Text>
                     </TouchableOpacity>
                 </View>

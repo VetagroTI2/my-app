@@ -4,7 +4,7 @@ export default function HeaderNav({ setOpcao }){
     return (
         <View style={styles.container}>
             <View style={styles.searchbox}>
-                <TouchableOpacity onPress={() => setOpcao("home")}>
+                <TouchableOpacity onPress={() => setOpcao("Home")}>
                     <Image style={styles.image} source={require('../public/angulo-esquerdo.png')}/>
                 </TouchableOpacity>
             </View>

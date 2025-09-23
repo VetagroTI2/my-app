@@ -76,26 +76,32 @@ export default function Map({ setOpcao }) {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.closeText}>X</Text>
-            </TouchableOpacity>
-
             <Text style={styles.modalTitle}>
               {ongSelecionada?.nome || "Nome da ONG"}
             </Text>
             <Text>
-              {ongSelecionada?.descricao ||
-                "Informações detalhadas sobre a ONG aqui..."}
+              {"Local: "+ongSelecionada?.endereco+", nº"+ongSelecionada?.numeroEnd+", "+ongSelecionada?.bairro+" - Fortaleza/CE"}
             </Text>
-
+            <Text>
+              {"Horário de Funcionamento: "+ongSelecionada?.horario}
+            </Text>
+            <Text>
+              {"Tamanho/Porte: "+ongSelecionada?.tamanho}
+            </Text>
+            <Text>
+              {"Doação/Contribuição: "+ongSelecionada?.doacao}
+            </Text>
             <TouchableOpacity
               style={styles.QueroDoarButton}
               onPress={() => setOpcao("Doar")}
             >
               <Text style={styles.QueroDoarText}>Quero Doar!</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.QueroDoarButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.QueroDoarText}>Fechar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -128,17 +134,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
-  },
-  closeButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    padding: 5,
-  },
-  closeText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
   },
   QueroDoarButton: {
     marginTop: 20,

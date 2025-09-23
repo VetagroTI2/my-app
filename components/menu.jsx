@@ -3,10 +3,10 @@ import { View, StyleSheet, TouchableOpacity, Image  } from 'react-native'
 export default function Menu({ setOpcao }) {
   return (
     <View style={styles.menu}>
-      <TouchableOpacity style={styles.menuItem} onPress={() => setOpcao("home")}>
+      <TouchableOpacity style={styles.menuItem} onPress={() => setOpcao("Home")}>
         <Image style={styles.image} source={require("../public/marcador-de-mapa.png")} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.menuItem} onPress={() => setOpcao("opcao2")}>
+      <TouchableOpacity style={styles.menuItem} onPress={() => setOpcao("Doações")}>
         <Image style={styles.image} source={require("../public/maos-coracao.png")} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.menuItem} onPress={() => setOpcao("Perfil")}>

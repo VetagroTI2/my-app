@@ -8,15 +8,18 @@ export function AuthProvider({ children }) {
 
     const [user, setUser] = useState(null)
     const [status, setStatus] = useState("")
+    const [grupo, setGrupo] = useState("")
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
         if (currentUser) {
-            setUser(currentUser);
-            setStatus("online");
+            setUser(currentUser)
+            setStatus("online")
+            setGrupo(currentUser.displayName)
         } else {
             setUser(null);
-            setStatus("offline");
+            setStatus("offline")
+            setGrupo("")
         }
         });
 
@@ -24,7 +27,7 @@ export function AuthProvider({ children }) {
     }, []);
 
     return (
-        <AuthContext.Provider value={{user, status}}>
+        <AuthContext.Provider value={{user, status, grupo}}>
             {children}
         </AuthContext.Provider>
     )

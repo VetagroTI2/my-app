@@ -1,0 +1,41 @@
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
+
+export default function ToggleButton({ label, selected, onSelect, text }) {
+  return (
+    <TouchableOpacity
+      style={[styles.item, selected && styles.selectedItem]}
+      onPress={onSelect}
+    >
+      <Text style={[styles.title, selected && styles.selectedText]}>
+        {label}
+      </Text>
+      <Text style={[styles.text, selected && styles.selectedText]}>
+        {text}
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  item: {
+    padding: 15,
+    marginBottom: 10,
+    borderRadius: 8,
+    backgroundColor: "#eee",
+  },
+  selectedItem: {
+    backgroundColor: "#000",
+  },
+  title: {
+    fontSize: 20,
+    color: "#000",
+    fontWeight: "bold"
+  },
+  text: {
+    fontSize: 16,
+    color: "#000",
+  },
+  selectedText: {
+    color: "#fff",
+  },
+});
