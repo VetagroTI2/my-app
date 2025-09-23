@@ -3,7 +3,7 @@ import ToggleButton from './elements/doaToggleButton'
 import { useState } from 'react'
 
 export default function Doa(){
-    const [campoTipo, setCampoTipo] = useState("")
+    const [campoTipo, setCampoTipo] = useState("fornecedor")
     return (
         <View style={styles.container}>
             <Text style={styles.title}>De qual maneira deseja fazer sua doação?</Text>
@@ -55,5 +55,12 @@ const styles = StyleSheet.create({
     maxHeight: "60%",
     marginTop: 40,  // espaçamento depois do topo
     marginBottom: 20,
-  }
+  },
+  button: {
+    backgroundColor: "#000000",
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
+  },
 })
