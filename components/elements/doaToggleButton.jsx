@@ -9,9 +9,11 @@ export default function ToggleButton({ label, selected, onSelect, text }) {
       <Text style={[styles.title, selected && styles.selectedText]}>
         {label}
       </Text>
-      <Text style={[styles.text, selected && styles.selectedText]}>
-        {text}
-      </Text>
+      { text ?
+        <Text style={[styles.text, selected && styles.selectedText]}>
+          {text}
+        </Text>
+      :null}
     </TouchableOpacity>
   );
 }

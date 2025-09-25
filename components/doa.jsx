@@ -1,40 +1,238 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native'
 import ToggleButton from './elements/doaToggleButton'
 import { useState } from 'react'
 
 export default function Doa(){
-    const [campoTipo, setCampoTipo] = useState("fornecedor")
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>De qual maneira deseja fazer sua doação?</Text>
-            <ScrollView style={styles.scroll}>
-                <ToggleButton
-                    label={"Entregue pelo Fornecedor"}
-                    text={"Mercados, Atacados e Varejos cadastrados em nossa base serão responsaveis por toda logistica e entrega! Itens e quantidade poderá ser requisitado pelo nosso app e serão enviados para administração do estabelicimento."}
-                    selected={campoTipo === "fornecedor"}
-                    onSelect={() => setCampoTipo("fornecedor")}
-                />
-                <ToggleButton
-                    label={"Entregue por Delivery"}
-                    text={"Se você tem algo para que possa doar e não tem como ir presencialmente ao local, chame um entregador! Modalidade integrada apenas  para serviços da Uber e 99. "}
-                    selected={campoTipo === "delivery"}
-                    onSelect={() => setCampoTipo("delivery")}
-                />
-                <ToggleButton
-                    label={"Presencialmente"}
-                    text={"Organize sua doação e mova-se para o local! Ao selecionar essa modalidade será enviado uma notificação à administração da ONG/Entidade para que todos fiquem ciente da sua chegada e doação."}
-                    selected={campoTipo === "presente"}
-                    onSelect={() => setCampoTipo("presente")}
-                />
-                <ToggleButton
-                    label={"Transferência"}
-                    text={"Realize qualquer transferencia em valores monetários para a instituição. Selecione a forma de pagamento disponivel pelo aplicativo ou registrado no seu cadastro."}
-                    selected={campoTipo === "transfe"}
-                    onSelect={() => setCampoTipo("transfe")}
-                />
-            </ScrollView>
+  /***************CONSTANTES DA FORMA DE DOAÇÃO******************* */
+  /**/ const [campoTipo, setCampoTipo] = useState("fornecedor")
+  /**/ const [confirm, setConfirm] = useState(false)
+  /***************CONSTANTES DA FORMA DE DOAÇÃO******************* */
+
+  /***************CONSTANTES DA FORMA FORNECEDOR******************* */
+  /**/ const [fornecedor, setFornecedor] = useState("acucar")
+  /**/ const [confirmFornecedor, setConfirmFornecedor] = useState(false)
+  /***************CONSTANTES DA FORMA FORNECEDOR******************* */
+
+  /***************CONSTANTES DA FORMA DELIVERY******************* */
+  /**/ const [delivery, setDelivery] = useState("uber")
+  /**/ const [confirmDelivery, setConfirmDelivery] = useState(false)
+  /***************CONSTANTES DA FORMA DELIVERY******************* */
+
+  /***************CONSTANTES DA FORMA TRANSFERENCIA******************* */
+  /**/ const [confirmPagamento, setConfirmPagamento] = useState(false)
+  /**/ const [confirmTransferencia, setConfirmTransferencia] = useState(false)
+  /**/ const [forma, setForma] = useState("Transferência Pix")
+  /**/ const [valor, setValor] = useState(0)
+  /***************CONSTANTES DA FORMA TRANSFERENCIA******************* */
+
+  if (confirm && campoTipo === "transfe") {
+    if (confirmPagamento) {
+      return (
+        <View style={pagar.container}>
+          <View style={pagar.content}>
+            <Text style={pagar.label}>Você vai enviar</Text>
+            <Text style={pagar.valor}>R$ {Number(valor).toFixed(2)}</Text>
+            <Text style={pagar.tipo}>{forma}</Text>
+
+            <View style={pagar.separator} />
+
+            <Text style={pagar.entidade}>ONG Esperança</Text>
+            <Text style={pagar.banco}>Banco do Brasil</Text>
+
+            <View style={pagar.separator} />
+
+            <Text style={pagar.taxa}>Taxa de Administração</Text>
+            <Text style={pagar.taxa}>+1,30%</Text>
+          </View>
+
+          <View style={pagar.footer}>
+            <Text style={pagar.total}>Valor Total: R$ {(Number(valor) + Number(valor) * 0.013).toFixed(2)}</Text>
+            <TouchableOpacity
+              style={pagar.button}
+              onPress={() => setConfirmTransferencia(true)}
+            >
+              <Text style={pagar.buttonText}>Pagar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
+      )
+    }
+    
+    return (
+      <View style={transf.container}>
+        <Text style={transf.title}>
+          Transferir para <Text style={transf.highlight}>Nome da ONG/Entidade</Text>
+        </Text>
+
+        <TextInput
+          style={transf.input}
+          keyboardType="numeric"
+          placeholder="R$ 0,00"
+          placeholderTextColor="#555"
+          onChangeText={(text) => setValor(text.replace(",", "."))}
+        />
+
+        <Text style={transf.subtitle}>Pagando com</Text>
+
+        <View style={transf.paymentOptions}>
+          <ToggleButton style={styles.option}
+            label={"Pix"}
+            selected={forma === "Transferência Pix"}
+            onSelect={() => setForma("Transferência Pix")}
+          />
+
+          <ToggleButton
+            label={"Boleto"}
+            selected={forma === "Boleto Bancário"}
+            onSelect={() => setForma("Boleto Bancário")}
+          />
+          <ToggleButton
+            label={"Cartão"}
+            selected={forma === "Cartão MASTER Final 9033"}
+            onSelect={() => setForma("Cartão MASTER Final 9033")}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={transf.button}
+          onPress={() => setConfirmPagamento(true)}
+        >
+          <Text style={transf.buttonText}>Confirmar</Text>
+        </TouchableOpacity>
+      </View>
     )
+  }
+
+  if (confirm && campoTipo === "delivery") {
+    if (confirmDelivery) {
+      return (
+        <View style={styles.container}>
+          <Image style={styles.imagePalmas} source={require('../public/maos-batendo-palmas.png')}/>
+          <View style={styles.containerText}>
+            <Text style={styles.text}>Abre uma aplicação externa por meio de uma API ou Integração.</Text>
+            <Text style={styles.text}>Uma chave ou token será criada para a integração e comunicação entre app e o Entregador.</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setConfirmFornecedor(true)}
+          >
+            <Text style={styles.buttonText}>Ver Doações</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Fazer um pedido para "Nome da ONG/Entidade" </Text>
+        <ScrollView style={styles.scroll}>
+          <ToggleButton
+            label={"Uber"}
+            selected={delivery === "uber"}
+            onSelect={() => setDelivery("uber")}
+          />
+          <ToggleButton
+            label={"99"}
+            selected={delivery === "99"}
+            onSelect={() => setDelivery("99")}
+          />
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setConfirmPagamento(true)}
+        >
+          <Text style={styles.buttonText}>Fazer Pedido</Text>
+          <Image style={styles.image} source={require('../public/seta-para-cima-e-para-a-direita-a-partir-do-quadrado.png')}/>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  if (confirm && campoTipo === "fornecedor") {
+    if (confirmFornecedor) {
+      return (
+        <View style={styles.container}>
+          <Image style={styles.imagePalmas} source={require('../public/maos-batendo-palmas.png')}/>
+          <View style={styles.containerText}>
+            <Text style={styles.text}>Abre uma aplicação externa por meio de uma API ou Integração.</Text>
+            <Text style={styles.text}>Uma chave ou token será criada para a integração e comunicação entre app e o Fornecedor.</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setConfirmFornecedor(true)}
+          >
+            <Text style={styles.buttonText}>Ver Doações</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Fazer um pedido para "Nome da ONG/Entidade" </Text>
+        <ScrollView style={styles.scroll}>
+          <ToggleButton
+            label={"Pao de Acuçar"}
+            selected={fornecedor === "acucar"}
+            onSelect={() => setFornecedor("acucar")}
+          />
+          <ToggleButton
+            label={"Cometa"}
+            selected={fornecedor === "cometa"}
+            onSelect={() => setFornecedor("cometa")}
+          />
+          <ToggleButton
+            label={"São Luis"}
+            selected={fornecedor === "luis"}
+            onSelect={() => setFornecedor("luis")}
+          />
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setConfirmFornecedor(true)}
+        >
+          <Text style={styles.buttonText}>Fazer Pedido</Text>
+          <Image style={styles.image} source={require('../public/seta-para-cima-e-para-a-direita-a-partir-do-quadrado.png')}/>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>De qual maneira deseja fazer sua doação?</Text>
+      <ScrollView style={styles.scroll}>
+        <ToggleButton
+            label={"Entregue pelo Fornecedor"}
+            text={"Mercados, Atacados e Varejos cadastrados em nossa base serão responsaveis por toda logistica e entrega! Itens e quantidade poderá ser requisitado pelo nosso app e serão enviados para administração do estabelicimento."}
+            selected={campoTipo === "fornecedor"}
+            onSelect={() => setCampoTipo("fornecedor")}
+        />
+        <ToggleButton
+            label={"Entregue por Delivery"}
+            text={"Se você tem algo para que possa doar e não tem como ir presencialmente ao local, chame um entregador! Modalidade integrada apenas  para serviços da Uber e 99. "}
+            selected={campoTipo === "delivery"}
+            onSelect={() => setCampoTipo("delivery")}
+        />
+        <ToggleButton
+            label={"Presencialmente"}
+            text={"Organize sua doação e mova-se para o local! Ao selecionar essa modalidade será enviado uma notificação à administração da ONG/Entidade para que todos fiquem ciente da sua chegada e doação."}
+            selected={campoTipo === "presente"}
+            onSelect={() => setCampoTipo("presente")}
+        />
+        <ToggleButton
+            label={"Transferência"}
+            text={"Realize qualquer transferencia em valores monetários para a instituição. Selecione a forma de pagamento disponivel pelo aplicativo ou registrado no seu cadastro."}
+            selected={campoTipo === "transfe"}
+            onSelect={() => setCampoTipo("transfe")}
+        />
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => setConfirm(true)}
+      >
+        <Text style={styles.buttonText}>Confirmar</Text>
+      </TouchableOpacity>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -43,7 +241,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start", // começa do topo (já respeitado pelo SafeAreaView)
     alignItems: "center",
     paddingHorizontal: 20, // só padding lateral
-    backgroundColor: "#fff",
+    backgroundColor: "#fff"
   },
   title: {
     fontSize: 50,
@@ -60,7 +258,162 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000",
     paddingVertical: 14,
     borderRadius: 8,
-    alignItems: "center",
-    marginTop: 10,
+    alignItems: "end",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 11,
+    width: "100%",
   },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  image: {
+    width: 24,      // largura menor
+    height: 24,     // altura 
+    marginLeft: 7  
+  },
+  containerText: {
+    marginBottom: 40,
+    width: "100%",
+    paddingHorizontal: 10,
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 12,
+    color: "#333",
+  },
+  imagePalmas: {
+    width: "40%",   // responsivo (ocupa 40% da largura da tela)
+    aspectRatio: 1, // mantém proporção quadrada
+    marginBottom: 60,
+  },
+
 })
+
+const transf = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "space-between",
+  },
+  title: {
+    fontSize: 20,
+    color: "#000000",
+    fontWeight: "600",
+    marginTop: 20,
+    textAlign: "center",
+    fontWeight: "bold"
+  },
+  highlight: {
+    color: "#303030", // ONG em cinza claro
+    fontWeight: "700",
+  },
+  input: {
+    fontSize: 36,
+    fontWeight: "bold",
+    color: "#000000",
+    textAlign: "center",
+    marginVertical: 40,
+    borderBottomWidth: 1,
+    borderBottomColor: "#000000",
+    paddingBottom: 10,
+  },
+  subtitle: {
+    fontSize: 20,
+    color: "#000000",
+    marginBottom: 15,
+    fontWeight: "bold"
+
+  },
+  paymentOptions: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 30,
+  },
+  button: {
+    backgroundColor: "#000000",
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: "#ffffff",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+});
+
+const pagar = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "space-between",
+  },
+  content: {
+    alignItems: "center",
+    marginTop: 40,
+  },
+  label: {
+    fontSize: 18,
+    color: "#000000",
+    marginBottom: 10,
+  },
+  valor: {
+    fontSize: 36,
+    fontWeight: "bold",
+    color: "#000000",
+    marginBottom: 5,
+  },
+  tipo: {
+    fontSize: 20,
+    color: "#000000",
+    marginBottom: 25,
+  },
+  separator: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "#000000",
+    marginVertical: 20,
+  },
+  entidade: {
+    fontSize: 18,
+    color: "#000000",
+    fontWeight: "600",
+  },
+  banco: {
+    fontSize: 16,
+    color: "#757575",
+    marginTop: 5,
+  },
+  taxa: {
+    fontSize: 16,
+    color: "#000000",
+    marginBottom: 5,
+  },
+  footer: {
+    marginBottom: 20,
+  },
+  total: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#000000",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  button: {
+    backgroundColor: "#000000",
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+});
