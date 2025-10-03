@@ -18,8 +18,10 @@ export default function App() {
   if (opcao === "Doar") {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
-        <HeaderNav setOpcao={setOpcao}/>
-        <Doa/>
+        <AuthProvider>
+          <HeaderNav setOpcao={setOpcao}/>
+          <Doa setOpcao={setOpcao}/>
+        </AuthProvider>
       </SafeAreaView>
     )
   }

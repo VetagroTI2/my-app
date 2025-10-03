@@ -6,12 +6,22 @@ import {
   updateDoc,
   deleteDoc,
   doc,
-  getDoc
+  getDoc,
+  addDoc
 } from "firebase/firestore";
 import { db } from "./service";
 
-// CREATE adddoc
+// create addDoc
+export async function createRandomDoc(data, collectionName) {
+  try {
+    const ref = collection(db, collectionName)
+    return await addDoc(ref,data)
+  } catch (error) {
+    console.log("Error no createRandomDoc", error)
+  }
+}
 
+// CREATE setDoc
 export async function createDoc(data, docId, collectionName) {
   try {
     // Cria referência do documento usando o ID e a coleção passados

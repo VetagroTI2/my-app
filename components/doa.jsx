@@ -1,8 +1,14 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native'
 import ToggleButton from './elements/doaToggleButton'
 import { useState } from 'react'
+import { useAuth } from '../context/authContext'
+import { createRandomDoc } from '../firebase/crud'
+import ListaComFormulario from './elements/doaFlatList'
 
-export default function Doa(){
+export default function Doa({ setOpcao }) {
+  
+  const { status, grupo, user } = useAuth()
+
   /***************CONSTANTES DA FORMA DE DOAÇÃO******************* */
   /**/ const [campoTipo, setCampoTipo] = useState("fornecedor")
   /**/ const [confirm, setConfirm] = useState(false)
@@ -11,11 +17,13 @@ export default function Doa(){
   /***************CONSTANTES DA FORMA FORNECEDOR******************* */
   /**/ const [fornecedor, setFornecedor] = useState("acucar")
   /**/ const [confirmFornecedor, setConfirmFornecedor] = useState(false)
+  /**/ const dadosFornecedor = {empresa: fornecedor}
   /***************CONSTANTES DA FORMA FORNECEDOR******************* */
 
   /***************CONSTANTES DA FORMA DELIVERY******************* */
   /**/ const [delivery, setDelivery] = useState("uber")
   /**/ const [confirmDelivery, setConfirmDelivery] = useState(false)
+  /**/ const dadosDelivery = {empresa: delivery}
   /***************CONSTANTES DA FORMA DELIVERY******************* */
 
   /***************CONSTANTES DA FORMA TRANSFERENCIA******************* */
@@ -23,10 +31,86 @@ export default function Doa(){
   /**/ const [confirmTransferencia, setConfirmTransferencia] = useState(false)
   /**/ const [forma, setForma] = useState("Transferência Pix")
   /**/ const [valor, setValor] = useState(0)
+  /**/ const dadosTransferencia = {forma: forma, valor: valor}
   /***************CONSTANTES DA FORMA TRANSFERENCIA******************* */
+
+  /***************CONSTANTES DA FORMA PRESENCIAL******************* */
+  /**/ const [confirmPresente, setConfirmPresente] = useState(false)
+  /**/ const dadosPresencial = {itens: ['Brinquedo/2', 'Roupa/5', 'arroz/1']}
+  /***************CONSTANTES DA FORMA PRESENCIAL******************* */
+
+  async function addFornecedor() {
+    let ref = "doador/"+user.uid+"/fornecedor"
+    await createRandomDoc(dadosFornecedor, ref)
+    setConfirmFornecedor(true)
+  }
+  async function addDelivery() {
+    let ref = "doador/"+user.uid+"/delivery"
+    await createRandomDoc(dadosDelivery, ref)
+    setConfirmDelivery(true)
+  }
+  async function addTransferencia() {
+    let ref = "doador/"+user.uid+"/transferencia"
+    await createRandomDoc(dadosTransferencia, ref)
+    setConfirmTransferencia(true)
+  }
+  async function addPresencial() {
+    let ref = "doador/"+user.uid+"/presencial"
+    await createRandomDoc(dadosPresencial, ref)
+    setConfirmPresente(true)
+  }
+
+  if (confirm && campoTipo === "presente") {
+    if (confirmPresente) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.containerText}>
+            <Text style={styles.text}>Sua doação foi registrada!</Text>
+          <Text style={styles.text}>Obrigado por Contribuir!</Text>
+          </View>
+          <Image style={styles.imagePalmas} source={require('../public/maos-batendo-palmas.png')}/>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setOpcao("Doações") }
+          >
+            <Text style={styles.buttonText}>Ver Doações</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Cadastreos itens para doação:</Text>
+        <ListaComFormulario/>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => addPresencial()}
+        >
+          <Text style={styles.buttonText}>Cadastrar doação</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
 
   if (confirm && campoTipo === "transfe") {
     if (confirmPagamento) {
+      if (confirmTransferencia) {
+        return (
+          <View style={styles.container}>
+            <View style={styles.containerText}>
+              <Text style={styles.text}>Sua doação foi registrada!</Text>
+            <Text style={styles.text}>Obrigado por Contribuir!</Text>
+            </View>
+            <Image style={styles.imagePalmas} source={require('../public/maos-batendo-palmas.png')}/>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setOpcao("Doações")}
+            >
+              <Text style={styles.buttonText}>Ver Doações</Text>
+            </TouchableOpacity>
+          </View>
+        )
+      }
       return (
         <View style={pagar.container}>
           <View style={pagar.content}>
@@ -49,7 +133,7 @@ export default function Doa(){
             <Text style={pagar.total}>Valor Total: R$ {(Number(valor) + Number(valor) * 0.013).toFixed(2)}</Text>
             <TouchableOpacity
               style={pagar.button}
-              onPress={() => setConfirmTransferencia(true)}
+              onPress={() => addTransferencia()}
             >
               <Text style={pagar.buttonText}>Pagar</Text>
             </TouchableOpacity>
@@ -114,7 +198,7 @@ export default function Doa(){
           </View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => setConfirmFornecedor(true)}
+            onPress={() => setOpcao("Doações")}
           >
             <Text style={styles.buttonText}>Ver Doações</Text>
           </TouchableOpacity>
@@ -138,7 +222,7 @@ export default function Doa(){
         </ScrollView>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setConfirmPagamento(true)}
+          onPress={() => addDelivery()}
         >
           <Text style={styles.buttonText}>Fazer Pedido</Text>
           <Image style={styles.image} source={require('../public/seta-para-cima-e-para-a-direita-a-partir-do-quadrado.png')}/>
@@ -158,7 +242,7 @@ export default function Doa(){
           </View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => setConfirmFornecedor(true)}
+            onPress={() => setOpcao("Doações") }
           >
             <Text style={styles.buttonText}>Ver Doações</Text>
           </TouchableOpacity>
@@ -187,7 +271,7 @@ export default function Doa(){
         </ScrollView>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setConfirmFornecedor(true)}
+          onPress={() => addFornecedor()}
         >
           <Text style={styles.buttonText}>Fazer Pedido</Text>
           <Image style={styles.image} source={require('../public/seta-para-cima-e-para-a-direita-a-partir-do-quadrado.png')}/>
@@ -227,7 +311,7 @@ export default function Doa(){
       </ScrollView>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => setConfirm(true)}
+        onPress={() => grupo === "Doador" && status === "online" ? setConfirm(true) : null}
       >
         <Text style={styles.buttonText}>Confirmar</Text>
       </TouchableOpacity>
