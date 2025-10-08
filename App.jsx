@@ -10,17 +10,19 @@ import Doa from './components/doa.jsx'
 import { AuthProvider } from './context/authContext.jsx'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import HeaderNav from './components/headerNav.jsx'
+import Doacoes from './components/doacoes.jsx'
 
 export default function App() {
 
   const [opcao, setOpcao] = useState("Home")
+  const [entidadeSelecionada, setEntidadeSelecionada] = useState("")
 
   if (opcao === "Doar") {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
         <AuthProvider>
           <HeaderNav setOpcao={setOpcao}/>
-          <Doa setOpcao={setOpcao}/>
+          <Doa setOpcao={setOpcao} setEntidade={entidadeSelecionada}/>
         </AuthProvider>
       </SafeAreaView>
     )
@@ -29,8 +31,11 @@ export default function App() {
   if (opcao === "Doações") {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
-        <Header setOpcao={setOpcao}/>
-        <Menu setOpcao={setOpcao}/>
+        <AuthProvider>
+          <Header/>
+          <Doacoes/>
+          <Menu setOpcao={setOpcao}/>
+        </AuthProvider>
       </SafeAreaView>
     )
   }
@@ -51,7 +56,7 @@ export default function App() {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
         <SearchBar/>
-        <Mapa setOpcao={setOpcao}/>
+        <Mapa setOpcao={setOpcao} setEntidade={setEntidadeSelecionada}/>
         <Menu setOpcao={setOpcao}/>
       </SafeAreaView>
     );

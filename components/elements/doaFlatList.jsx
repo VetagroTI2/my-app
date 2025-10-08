@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Ícones do Expo
 
-export default function ListaComFormulario() {
+export default function ListaComFormulario({ setLista }) {
   const [itens, setItens] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 

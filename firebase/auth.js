@@ -15,6 +15,7 @@ export const registrar = async (email, senha) => {
 // Login usuário
 export const login = async (email, senha, tipo) => {
   try {
+    //CRIAR UMA CONDICIONAL PARA O tipo. Pois não pode entrar com conta de doador sendo do tipo Entidade
     const userCredential = await signInWithEmailAndPassword(auth, email, senha);
     const user = userCredential.user
     await updateProfile(user, {displayName:tipo})

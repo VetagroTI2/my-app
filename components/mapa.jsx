@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { getAllDocs } from "../firebase/crud";
 
-export default function Map({ setOpcao }) {
+export default function Map({ setOpcao, setEntidade }) {
   const initialRegion = {
     latitude: -3.71722,
     longitude: -38.54306,
@@ -93,7 +93,7 @@ export default function Map({ setOpcao }) {
             </Text>
             <TouchableOpacity
               style={styles.QueroDoarButton}
-              onPress={() => setOpcao("Doar")}
+              onPress={() => {setOpcao("Doar"); setEntidade(ongSelecionada);}}
             >
               <Text style={styles.QueroDoarText}>Quero Doar!</Text>
             </TouchableOpacity>

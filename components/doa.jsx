@@ -3,11 +3,14 @@ import ToggleButton from './elements/doaToggleButton'
 import { useState } from 'react'
 import { useAuth } from '../context/authContext'
 import { createRandomDoc } from '../firebase/crud'
+import { Timestamp } from 'firebase/firestore'
 import ListaComFormulario from './elements/doaFlatList'
 
-export default function Doa({ setOpcao }) {
+export default function Doa({ setOpcao, setEntidade }) {
   
   const { status, grupo, user } = useAuth()
+  const dataHoje = new Date()
+  const dataHojeTimestamp = Timestamp.fromDate(dataHoje)
 
   /***************CONSTANTES DA FORMA DE DOAÇÃO******************* */
   /**/ const [campoTipo, setCampoTipo] = useState("fornecedor")
@@ -17,13 +20,13 @@ export default function Doa({ setOpcao }) {
   /***************CONSTANTES DA FORMA FORNECEDOR******************* */
   /**/ const [fornecedor, setFornecedor] = useState("acucar")
   /**/ const [confirmFornecedor, setConfirmFornecedor] = useState(false)
-  /**/ const dadosFornecedor = {empresa: fornecedor}
+  /**/ const dadosFornecedor = {empresa: fornecedor, tipo: "Fornecedor", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp }
   /***************CONSTANTES DA FORMA FORNECEDOR******************* */
 
   /***************CONSTANTES DA FORMA DELIVERY******************* */
   /**/ const [delivery, setDelivery] = useState("uber")
   /**/ const [confirmDelivery, setConfirmDelivery] = useState(false)
-  /**/ const dadosDelivery = {empresa: delivery}
+  /**/ const dadosDelivery = {empresa: delivery, tipo: "Delivery", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp }
   /***************CONSTANTES DA FORMA DELIVERY******************* */
 
   /***************CONSTANTES DA FORMA TRANSFERENCIA******************* */
@@ -31,12 +34,12 @@ export default function Doa({ setOpcao }) {
   /**/ const [confirmTransferencia, setConfirmTransferencia] = useState(false)
   /**/ const [forma, setForma] = useState("Transferência Pix")
   /**/ const [valor, setValor] = useState(0)
-  /**/ const dadosTransferencia = {forma: forma, valor: valor}
+  /**/ const dadosTransferencia = {forma: forma, valor: valor, tipo: "Transferencia", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp }
   /***************CONSTANTES DA FORMA TRANSFERENCIA******************* */
 
   /***************CONSTANTES DA FORMA PRESENCIAL******************* */
   /**/ const [confirmPresente, setConfirmPresente] = useState(false)
-  /**/ const dadosPresencial = {itens: ['Brinquedo/2', 'Roupa/5', 'arroz/1']}
+  /**/ const dadosPresencial = {itens: ['Brinquedo/2', 'Roupa/5', 'arroz/1'], tipo: "Presencial", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp }
   /***************CONSTANTES DA FORMA PRESENCIAL******************* */
 
   async function addFornecedor() {
@@ -145,7 +148,7 @@ export default function Doa({ setOpcao }) {
     return (
       <View style={transf.container}>
         <Text style={transf.title}>
-          Transferir para <Text style={transf.highlight}>Nome da ONG/Entidade</Text>
+          Transferir para <Text style={transf.highlight}>{setEntidade?.nome}</Text>
         </Text>
 
         <TextInput

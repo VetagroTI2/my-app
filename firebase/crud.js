@@ -40,15 +40,14 @@ export async function createDoc(data, docId, collectionName) {
 export async function getAllDocs(collectionName) {
   try {
     const snapshot = await getDocs(collection(db, collectionName));
-    let docs = [];
-    snapshot.forEach((doc) => {
-      docs.push({ id: doc.id, ...doc.data() });
-    });
+    const docs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     return docs;
   } catch (error) {
     console.error("Erro ao buscar documentos:", error);
+    return [];
   }
 }
+
 
 export async function getDocById(collectionName, id) {
   try {
