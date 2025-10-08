@@ -4,10 +4,16 @@ import { getAllDocs } from "../firebase/crud";
 import { useAuth } from "../context/authContext.jsx";
 
 export default function Doacoes() {
-  const { user } = useAuth();
-  const [filtro, setFiltro] = useState("Todos");
-  const [doacoes, setDoacoes] = useState([]);
-  const [carregando, setCarregando] = useState(true);
+  const { user } = useAuth()
+  const [filtro, setFiltro] = useState("Todos")
+  const [doacoes, setDoacoes] = useState([])
+  const [carregando, setCarregando] = useState(true)
+
+  const [telaDetalhe, setTelaDetalhe] = useState(false);
+  const [doacaoSelecionada, setDoacaoSelecionada] = useState(null);
+
+  const [avaliacao, setAvaliacao] = useState(0)
+  const estrelas = [1, 2, 3, 4, 5]
 
   const filtros = ["Todos", "Fornecedor", "Delivery", "Transferencia", "Presencial"];
 
@@ -56,6 +62,34 @@ export default function Doacoes() {
     return listaFiltrada;
   };
 
+  if (telaDetalhe && doacaoSelecionada) {
+    return (
+      <View style={styles.container}>
+        <Text style={details.titulo}>Detalhes da Doação</Text>
+
+        <Text style={details.label}>Nome:</Text>
+        <Text style={details.valor}>{doacaoSelecionada.nome}</Text>
+
+        <Text style={details.label}>Tipo:</Text>
+        <Text style={details.valor}>{doacaoSelecionada.tipo}</Text>
+
+        <Text style={details.label}>Status:</Text>
+        <Text style={details.valor}>{doacaoSelecionada.status}</Text>
+
+        <Text style={[details.label, { marginTop: 20 }]}>Avaliação:</Text>
+        <View style={details.estrelasContainer}>
+          {estrelas.map((estrela) => (
+            <TouchableOpacity key={estrela} onPress={() => setAvaliacao(estrela)}>
+              <Text style={[details.estrela, estrela <= avaliacao && details.estrelaAtiva]}>
+                ★
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.filtros}>
@@ -80,7 +114,7 @@ export default function Doacoes() {
           keyExtractor={(item, index) => item.id || index.toString()}
           contentContainerStyle={{ padding: 16 }}
           renderItem={({ item }) => (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setTelaDetalhe(true) || setDoacaoSelecionada(item)}>
               <View style={styles.card}>
                 <Text style={styles.nome}>{item.nome}</Text>
                 <Text style={styles.tipo}>{item.tipo}</Text>
@@ -145,4 +179,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 4,
   },
+});
+
+
+const details = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#fff', padding: 20 },
+  titulo: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
+  label: { fontWeight: 'bold', marginTop: 10 },
+  valor: { fontSize: 16 },
+  estrelasContainer: { flexDirection: 'row', marginTop: 10 },
+  estrela: { fontSize: 32, color: '#ccc', marginHorizontal: 4 },
+  estrelaAtiva: { color: '#FFD700' }, // amarelo
 });
