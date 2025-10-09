@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useAuth } from '../context/authContext'
 import ToggleButton from './elements/authToggleButton'
 import AuthModal from './elements/modalAuth'
-import { createDoc, getAllDocs } from '../firebase/crud'
+import { createDoc } from '../firebase/crud'
 import { Picker } from '@react-native-picker/picker'
 
 export default function Perfil() {

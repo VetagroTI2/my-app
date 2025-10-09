@@ -20,13 +20,13 @@ export default function Doa({ setOpcao, setEntidade }) {
   /***************CONSTANTES DA FORMA FORNECEDOR******************* */
   /**/ const [fornecedor, setFornecedor] = useState("acucar")
   /**/ const [confirmFornecedor, setConfirmFornecedor] = useState(false)
-  /**/ const dadosFornecedor = {empresa: fornecedor, tipo: "Fornecedor", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp }
+  /**/ const dadosFornecedor = {empresa: fornecedor, tipo: "Fornecedor", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp, ong_id: setEntidade?.id, pedido: "#0075562", situacao: "separando" }
   /***************CONSTANTES DA FORMA FORNECEDOR******************* */
 
   /***************CONSTANTES DA FORMA DELIVERY******************* */
   /**/ const [delivery, setDelivery] = useState("uber")
   /**/ const [confirmDelivery, setConfirmDelivery] = useState(false)
-  /**/ const dadosDelivery = {empresa: delivery, tipo: "Delivery", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp }
+  /**/ const dadosDelivery = {empresa: delivery, tipo: "Delivery", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp, ong_id: setEntidade?.id, carga: "caixa de papel", motorista: "Joaquim", veiculo: "Moto", placa: "XXX-0000" }
   /***************CONSTANTES DA FORMA DELIVERY******************* */
 
   /***************CONSTANTES DA FORMA TRANSFERENCIA******************* */
@@ -34,12 +34,12 @@ export default function Doa({ setOpcao, setEntidade }) {
   /**/ const [confirmTransferencia, setConfirmTransferencia] = useState(false)
   /**/ const [forma, setForma] = useState("Transferência Pix")
   /**/ const [valor, setValor] = useState(0)
-  /**/ const dadosTransferencia = {forma: forma, valor: valor, tipo: "Transferencia", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp }
+  /**/ const dadosTransferencia = {forma: forma, valor: valor, tipo: "Transferencia", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp, ong_id: setEntidade?.id }
   /***************CONSTANTES DA FORMA TRANSFERENCIA******************* */
 
   /***************CONSTANTES DA FORMA PRESENCIAL******************* */
   /**/ const [confirmPresente, setConfirmPresente] = useState(false)
-  /**/ const dadosPresencial = {itens: ['Brinquedo/2', 'Roupa/5', 'arroz/1'], tipo: "Presencial", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp }
+  /**/ const dadosPresencial = {itens: ['Brinquedo/2/usado/Bom pra crianças', 'Roupa/5/nova/peça feminina', 'arroz/1/novo/5kg'], tipo: "Presencial", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp, ong_id: setEntidade?.id }
   /***************CONSTANTES DA FORMA PRESENCIAL******************* */
 
   async function addFornecedor() {
