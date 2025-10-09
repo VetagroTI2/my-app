@@ -215,8 +215,11 @@ export default function Doacoes() {
           </TouchableOpacity>
         ))}
       </View>
-
-      {carregando ? (
+      {!user?.uid ? (
+        <Text style={{ textAlign: "center", marginTop: 20 }}>
+          ⚠️ Faça login para ver suas doações.
+        </Text>
+      ) : carregando ? (
         <ActivityIndicator size="large" style={{ marginTop: 50 }} />
       ) : (
         <FlatList
@@ -224,7 +227,12 @@ export default function Doacoes() {
           keyExtractor={(item, index) => item.id || index.toString()}
           contentContainerStyle={{ padding: 16 }}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => setTelaDetalhe(true) || setDoacaoSelecionada(item)}>
+            <TouchableOpacity
+              onPress={() => {
+                setDoacaoSelecionada(item);
+                setTelaDetalhe(true);
+              }}
+            >
               <View style={styles.card}>
                 <Text style={styles.nome}>{item.nome}</Text>
                 <Text style={styles.tipo}>{item.tipo}</Text>

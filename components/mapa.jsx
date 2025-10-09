@@ -76,6 +76,9 @@ export default function Map({ setOpcao, setEntidade }) {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
+            <View style={styles.ratingContainer}>
+              <Text style={styles.ratingText}>{ongSelecionada?.rating || "0"} ★</Text>
+            </View>
             <Text style={styles.modalTitle}>
               {ongSelecionada?.nome || "Nome da ONG"}
             </Text>
@@ -146,4 +149,26 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  ratingContainer: {
+  position: 'absolute',
+  top: 10,
+  right: 13,
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#fff',
+  paddingHorizontal: 8,
+  paddingVertical: 4,
+  borderRadius: 8,
+  elevation: 5,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.3,
+  shadowRadius: 3,
+},
+ratingText: {
+  marginLeft: 4,
+  fontSize: 16,
+  fontWeight: 'bold',
+  color: '#000',
+},
 });
