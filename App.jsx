@@ -6,11 +6,13 @@ import Mapa from './components/mapa.jsx'
 import Header from './components/header.jsx'
 import Perfil from './components/auth.jsx'
 import Doa from './components/doa.jsx'
+import HeaderNav from './components/headerNav.jsx'
+import Doacoes from './components/doacoes.jsx'
+import ToastManager, { Toast } from 'toastify-react-native'
 
 import { AuthProvider } from './context/authContext.jsx'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import HeaderNav from './components/headerNav.jsx'
-import Doacoes from './components/doacoes.jsx'
+
 
 export default function App() {
 
@@ -47,6 +49,7 @@ export default function App() {
           <Header/>
           <Perfil/>
           <Menu setOpcao={setOpcao}/>
+          <ToastManager/>
         </AuthProvider>
       </SafeAreaView>
     )

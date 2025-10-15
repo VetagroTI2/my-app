@@ -1,5 +1,8 @@
-import { auth } from "./service.js";
+import { auth, db } from "./service.js";
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { Toast } from 'toastify-react-native'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+
 
 // Registrar usuário
 export const registrar = async (email, senha) => {
@@ -15,12 +18,24 @@ export const registrar = async (email, senha) => {
 // Login usuário
 export const login = async (email, senha, tipo) => {
   try {
-    //CRIAR UMA CONDICIONAL PARA O tipo. Pois não pode entrar com conta de doador sendo do tipo Entidade
-    const userCredential = await signInWithEmailAndPassword(auth, email, senha);
-    const user = userCredential.user
-    await updateProfile(user, {displayName:tipo})
+    const collectionRef = collection(db, tipo === "Doador" ? "doador" : "entidades")
+    const q = query(collectionRef, where("email", "==", email))
+    const querySnapshot = await getDocs(q)
 
-    console.log("Logado:", user.uid);
+    if (querySnapshot.empty) {
+      Toast.error("Nenhum usuário encontrado.")
+      return false
+    } else {
+      const userCredential = await signInWithEmailAndPassword(auth, email, senha);
+      const user = userCredential.user
+      await updateProfile(user, {displayName:tipo})
+      return false
+    }
+    
+    //CRIAR UMA CONDICIONAL PARA O tipo. Pois não pode entrar com conta de doador sendo do tipo Entidade
+
+
+    //console.log("Logado:", user.uid);
   } catch (error) {
     console.log("Erro:", error.message);
   }

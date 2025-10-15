@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, ScrollView} from 'react-native'
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator} from 'react-native'
 import { login, logout, registrar } from '../firebase/auth'
 import { useState } from 'react'
 import { useAuth } from '../context/authContext'
@@ -6,6 +6,7 @@ import ToggleButton from './elements/authToggleButton'
 import AuthModal from './elements/modalAuth'
 import { createDoc } from '../firebase/crud'
 import { Picker } from '@react-native-picker/picker'
+import { Toast } from 'toastify-react-native'
 
 export default function Perfil() {
 
@@ -13,7 +14,9 @@ export default function Perfil() {
 
     const [tipoFormulario, setTipoFormulario] = useState("Entrar")
 
-    const [openModal, setOpenModal] = useState(false);
+    const [openModal, setOpenModal] = useState(false)
+
+    const [carregar, setCarregar] = useState(false)
 
     //*************** VARIAVEIS DE ENTRADA 
     /**/ const [emailSignIn, setEmailSignIn] = useState("")
@@ -82,6 +85,12 @@ export default function Perfil() {
         }
     }
 
+    if (carregar) {
+        return (
+            <ActivityIndicator size="large" style={{ marginTop: 50 }} />
+        )
+    }
+
     if (status === "online") {
         return (
         <View style={styles.container}>
@@ -134,12 +143,12 @@ export default function Perfil() {
                         <Picker.Item label="Doador" value="Doador"/>
                         <Picker.Item label="Entidade/ONG" value="Entidade/ONG"/>
                     </Picker>
-                    <TouchableOpacity style={styles.button} onPress={() => selectTipo != "" ? login(emailSignIn, passSignIn, selectTipo) : null}>
+                    <TouchableOpacity style={styles.button} onPress={() => selectTipo != "" ? login(emailSignIn, passSignIn, selectTipo): Toast.error("Selecione o tipo de usuário")}>
                         <Text style={styles.buttonText}>Entrar</Text>
                     </TouchableOpacity>
                 </View>
 
-                <Text style={styles.registerText}>
+                <Text style={styles.registerText}>FF
                     Ainda não possui um cadastro?
                     <Text style={styles.registerLink} onPress={() => setTipoFormulario("Registrar")}> Clique aqui</Text>
                 </Text>
