@@ -10,7 +10,7 @@ import { Toast } from 'toastify-react-native'
 
 export default function Perfil() {
 
-    const { user, status, grupo } = useAuth()
+    const { user, status } = useAuth()
 
     const [tipoFormulario, setTipoFormulario] = useState("Entrar")
 
@@ -98,12 +98,7 @@ export default function Perfil() {
                 <Text style={styles.label}>Usuário logado ✅</Text>
                 <Text style={styles.info}>UID: {user?.uid}</Text>
                 <Text style={styles.info}>Email: {user?.email}</Text>
-                { grupo === "Entidade/ONG" ?
                 <TouchableOpacity style={styles.button} onPress={() => setOpenModal(true)}>
-                    <Text style={styles.buttonText}>Gravar Ponto</Text>
-                </TouchableOpacity>
-                :null}
-                <TouchableOpacity style={styles.button} onPress={() => null}>
                     <Text style={styles.buttonText}>Atualizar Dados</Text>
                 </TouchableOpacity>
 
@@ -148,7 +143,7 @@ export default function Perfil() {
                     </TouchableOpacity>
                 </View>
 
-                <Text style={styles.registerText}>FF
+                <Text style={styles.registerText}>
                     Ainda não possui um cadastro?
                     <Text style={styles.registerLink} onPress={() => setTipoFormulario("Registrar")}> Clique aqui</Text>
                 </Text>

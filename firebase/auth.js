@@ -3,7 +3,6 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { Toast } from 'toastify-react-native'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 
-
 // Registrar usuário
 export const registrar = async (email, senha) => {
   try {
@@ -18,7 +17,7 @@ export const registrar = async (email, senha) => {
 // Login usuário
 export const login = async (email, senha, tipo) => {
   try {
-    const collectionRef = collection(db, tipo === "Doador" ? "doador" : "entidades")
+    const collectionRef = collection(db, tipo === "Doador" ? "doador" : "entidade")
     const q = query(collectionRef, where("email", "==", email))
     const querySnapshot = await getDocs(q)
 
@@ -44,7 +43,7 @@ export const login = async (email, senha, tipo) => {
 export const logout = async () => {
   try {
     await signOut(auth);
-    console.log("Usuário saiu com sucesso!");
+    Toast.success("Desconectado com sucesso!");
   } catch (error) {
     console.error("Erro ao sair:", error);
   }

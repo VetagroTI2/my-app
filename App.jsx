@@ -25,6 +25,7 @@ export default function App() {
         <AuthProvider>
           <HeaderNav setOpcao={setOpcao}/>
           <Doa setOpcao={setOpcao} setEntidade={entidadeSelecionada}/>
+          <ToastManager/>
         </AuthProvider>
       </SafeAreaView>
     )

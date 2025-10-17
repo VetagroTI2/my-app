@@ -5,7 +5,7 @@ import { updateDocById, getDocById } from "../../firebase/crud";
 import { useAuth } from "../../context/authContext";
 
 export default function AuthModal({ visible, onClose }) {
-  const { user } = useAuth();
+  const { user, grupo } = useAuth();
 
   // estados
   const [campoLatitude, setCampoLatitude] = useState("");
@@ -13,18 +13,22 @@ export default function AuthModal({ visible, onClose }) {
   const [campoHorario, setCampoHorario] = useState("");
   const [campoTamanho, setCampoTamanho] = useState("");
   const [campoDoacoes, setCampoDoacoes] = useState("");
+  const [campoEndereco, setCampoEndereco] = useState("");
+  const [campoBairro, setCampoBairro] = useState("");
 
   // quando abrir o modal, carrega os dados do Firestore
   useEffect(() => {
     if (visible) {
       async function carregarDados() {
-        const dados = await getDocById("entidade", user.uid);
+        const dados = await getDocById(grupo === "Doador" ? "doador" : "entidade", user.uid);
         if (dados) {
           setCampoLatitude(dados.geoloc?.latitude?.toString() || "");
           setCampoLongitude(dados.geoloc?.longitude?.toString() || "");
           setCampoHorario(dados.horario || "");
           setCampoTamanho(dados.tamanho || "");
           setCampoDoacoes(dados.doacao || "");
+          setCampoEndereco(dados.endereco || "");
+          setCampoBairro(dados.bairro || "");
         }
       }
       carregarDados();
@@ -39,9 +43,11 @@ export default function AuthModal({ visible, onClose }) {
       horario: campoHorario,
       tamanho: campoTamanho,
       doacao: campoDoacoes,
+      endereco: campoEndereco,
+      bairro: campoBairro,
     };
 
-    await updateDocById("entidade", user.uid, data).then((param) =>
+    await updateDocById(grupo === "Doador" ? "doador" : "entidade", user.uid, data).then((param) =>
       param ? console.log("Atualizado!") : null
     );
   }
@@ -51,36 +57,51 @@ export default function AuthModal({ visible, onClose }) {
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <ScrollView>
-            <Text style={styles.label}>Latitude</Text>
+            <Text style={styles.modalTitle}>{grupo}</Text>
+            <Text style={styles.label}>Endereço</Text>
             <TextInput
               style={styles.input}
-              value={campoLatitude}
-              onChangeText={setCampoLatitude}
+              value={campoEndereco}
+              onChangeText={setCampoEndereco}
             />
-            <Text style={styles.label}>Longitude</Text>
+            <Text style={styles.label}>Bairro</Text>
             <TextInput
               style={styles.input}
-              value={campoLongitude}
-              onChangeText={setCampoLongitude}
+              value={campoBairro}
+              onChangeText={setCampoBairro}
             />
-            <Text style={styles.label}>Horário de Func.</Text>
-            <TextInput
-              style={styles.input}
-              value={campoHorario}
-              onChangeText={setCampoHorario}
-            />
-            <Text style={styles.label}>Tamanho</Text>
-            <TextInput
-              style={styles.input}
-              value={campoTamanho}
-              onChangeText={setCampoTamanho}
-            />
-            <Text style={styles.label}>Aceito doações de</Text>
-            <TextInput
-              style={styles.input}
-              value={campoDoacoes}
-              onChangeText={setCampoDoacoes}
-            />
+            { grupo === "Entidade/ONG" && (<>
+              <Text style={styles.label}>Latitude</Text>
+              <TextInput
+                style={styles.input}
+                value={campoLatitude}
+                onChangeText={setCampoLatitude}
+              />
+              <Text style={styles.label}>Longitude</Text>
+              <TextInput
+                style={styles.input}
+                value={campoLongitude}
+                onChangeText={setCampoLongitude}
+              />
+              <Text style={styles.label}>Horário de Func.</Text>
+              <TextInput
+                style={styles.input}
+                value={campoHorario}
+                onChangeText={setCampoHorario}
+              />
+              <Text style={styles.label}>Tamanho</Text>
+              <TextInput
+                style={styles.input}
+                value={campoTamanho}
+                onChangeText={setCampoTamanho}
+              />
+              <Text style={styles.label}>Aceito doações de</Text>
+              <TextInput
+                style={styles.input}
+                value={campoDoacoes}
+                onChangeText={setCampoDoacoes}
+              />
+            </>)}
           </ScrollView>
           <TouchableOpacity style={styles.QueroDoarButton} onPress={updateEntidade}>
             <Text style={styles.QueroDoarText}>Atualizar</Text>

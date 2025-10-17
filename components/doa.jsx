@@ -5,6 +5,7 @@ import { useAuth } from '../context/authContext'
 import { createRandomDoc } from '../firebase/crud'
 import { Timestamp } from 'firebase/firestore'
 import ListaComFormulario from './elements/doaFlatList'
+import { Toast } from 'toastify-react-native'
 
 export default function Doa({ setOpcao, setEntidade }) {
   
@@ -314,7 +315,7 @@ export default function Doa({ setOpcao, setEntidade }) {
       </ScrollView>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => grupo === "Doador" && status === "online" ? setConfirm(true) : null}
+        onPress={() => grupo === "Doador" && status === "online" ? setConfirm(true) : Toast.error("Você precisa estar logado como Doador para prosseguir com a doação!")}
       >
         <Text style={styles.buttonText}>Confirmar</Text>
       </TouchableOpacity>
