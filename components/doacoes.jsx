@@ -221,17 +221,19 @@ export default function Doacoes() {
   return (
     <View style={styles.container}>
       <View style={styles.filtros}>
-        {filtros.map((item) => (
-          <TouchableOpacity
-            key={item}
-            style={[styles.filtroBotao, filtro === item && styles.filtroAtivo]}
-            onPress={() => setFiltro(item)}
-          >
-            <Text style={[styles.filtroTexto, filtro === item && styles.filtroTextoAtivo]}>
-              {item}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {filtros.map((item) => (
+            <TouchableOpacity
+              key={item}
+              style={[styles.filtroBotao, filtro === item && styles.filtroAtivo]}
+              onPress={() => setFiltro(item)}
+            >
+              <Text style={[styles.filtroTexto, filtro === item && styles.filtroTextoAtivo]}>
+                {item}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
       {!user?.uid ? (
         <Text style={{ textAlign: "center", marginTop: 20 }}>
