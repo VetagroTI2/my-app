@@ -45,22 +45,34 @@ export default function Doa({ setOpcao, setEntidade }) {
 
   async function addFornecedor() {
     let ref = "doador/"+user.uid+"/fornecedor"
-    await createRandomDoc(dadosFornecedor, ref)
+    await createRandomDoc(dadosFornecedor, ref).then(async(res) => {
+      let ref = "entidade/"+setEntidade?.id+"/fornecedor"
+      await createRandomDoc({...dadosFornecedor, doador_id: user.uid, doa_id: res.id}, ref)
+    })
     setConfirmFornecedor(true)
   }
   async function addDelivery() {
     let ref = "doador/"+user.uid+"/delivery"
-    await createRandomDoc(dadosDelivery, ref)
+    await createRandomDoc(dadosDelivery, ref).then(async(res) => {
+      let ref = "entidade/"+setEntidade?.id+"/delivery"
+      await createRandomDoc({...dadosDelivery, doador_id: user.uid, doa_id: res.id}, ref)
+    })
     setConfirmDelivery(true)
   }
   async function addTransferencia() {
     let ref = "doador/"+user.uid+"/transferencia"
-    await createRandomDoc(dadosTransferencia, ref)
+    await createRandomDoc(dadosTransferencia, ref).then(async(res) => {
+      let ref = "entidade/"+setEntidade?.id+"/transferencia"
+      await createRandomDoc({...dadosTransferencia, doador_id: user.uid, doa_id: res.id}, ref)
+    })
     setConfirmTransferencia(true)
   }
   async function addPresencial() {
     let ref = "doador/"+user.uid+"/presencial"
-    await createRandomDoc(dadosPresencial, ref)
+    await createRandomDoc(dadosPresencial, ref).then(async(res) => {
+      let ref = "entidade/"+setEntidade?.id+"/presencial"
+      await createRandomDoc({...dadosPresencial, doador_id: user.uid, doa_id: res.id}, ref)
+    })
     setConfirmPresente(true)
   }
 

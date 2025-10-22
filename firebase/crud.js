@@ -77,15 +77,3 @@ export async function updateDocById(collectionName, id, newData) {
     return false;
   }
 }
-
-// DELETE
-export async function deleteDocById(id) {
-  try {
-    const docRef = doc(db, COLLECTION_NAME, id);
-    await deleteDoc(docRef);
-    return true;
-  } catch (error) {
-    console.error("Erro ao deletar documento:", error);
-    return false;
-  }
-}

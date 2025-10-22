@@ -3,6 +3,8 @@ import { useState, useEffect } from "react"
 import { GeoPoint } from "firebase/firestore";
 import { updateDocById, getDocById } from "../../firebase/crud";
 import { useAuth } from "../../context/authContext";
+import { Toast } from 'toastify-react-native'
+
 
 export default function AuthModal({ visible, onClose }) {
   const { user, grupo } = useAuth();
@@ -48,7 +50,7 @@ export default function AuthModal({ visible, onClose }) {
     };
 
     await updateDocById(grupo === "Doador" ? "doador" : "entidade", user.uid, data).then((param) =>
-      param ? console.log("Atualizado!") : null
+      param ? Toast.success("Atualizado com sucesso!") : null
     );
   }
 

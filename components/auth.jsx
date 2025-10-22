@@ -38,6 +38,19 @@ export default function Perfil() {
     /**/ const [campoSenhaConf, setCampoSenhaConf] = useState("")
     /*************************************************************/
 
+    async function sendDataSignIn() {
+        setCarregar(true)
+        if (selectTipo !== "") {
+            await login(emailSignIn, passSignIn, selectTipo).then(() => setCarregar(false))
+        } else {
+            Toast.error("Selecione o tipo de usuário!")
+            setCarregar(false)
+        }
+        setEmailSignIn("")
+        setPassSignIn("")
+        setSelectTipo("") 
+    }
+
     async function sendDataRegister() {
         const newUser = {
             campoTipo,
@@ -87,7 +100,10 @@ export default function Perfil() {
 
     if (carregar) {
         return (
-            <ActivityIndicator size="large" style={{ marginTop: 50 }} />
+            <View style={styles.container}>
+                <ActivityIndicator size="large" style={{ marginTop: 50 }} />
+            </View>
+
         )
     }
 
@@ -102,7 +118,7 @@ export default function Perfil() {
                     <Text style={styles.buttonText}>Atualizar Dados</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={() => logout()}>
+                <TouchableOpacity style={styles.button} onPress={() => {setCarregar(true); logout().then(() => {setCarregar(false); setEmailSignIn(""); setPassSignIn(""); setSelectTipo("")})}}>
                     <Text style={styles.buttonText}>Sair</Text>
                 </TouchableOpacity>
             </View>
@@ -138,7 +154,7 @@ export default function Perfil() {
                         <Picker.Item label="Doador" value="Doador"/>
                         <Picker.Item label="Entidade/ONG" value="Entidade/ONG"/>
                     </Picker>
-                    <TouchableOpacity style={styles.button} onPress={() => selectTipo != "" ? login(emailSignIn, passSignIn, selectTipo): Toast.error("Selecione o tipo de usuário")}>
+                    <TouchableOpacity style={styles.button} onPress={() => sendDataSignIn()}>
                         <Text style={styles.buttonText}>Entrar</Text>
                     </TouchableOpacity>
                 </View>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator, ScrollView } from "react-native";
-import { getAllDocs } from "../firebase/crud";
+import { getAllDocs, updateDocById } from "../firebase/crud";
 import { useAuth } from "../context/authContext.jsx";
+import { Toast } from 'toastify-react-native'
 
 export default function Doacoes() {
-  const { user } = useAuth()
+  const { user, grupo } = useAuth()
   const [filtro, setFiltro] = useState("Todos")
   const [doacoes, setDoacoes] = useState([])
   const [carregando, setCarregando] = useState(true)
@@ -26,7 +27,7 @@ export default function Doacoes() {
 
         const resultados = await Promise.all(
           subcolecoes.map(async (nome) => {
-            const data = await getAllDocs(`doador/${user.uid}/${nome}`)
+            const data = await getAllDocs(`${grupo === "Doador" ? "doador" : "entidade" }/${user.uid}/${nome}`)
             return data
           })
         )
@@ -61,6 +62,16 @@ export default function Doacoes() {
 
     return listaFiltrada;
   };
+
+  async function updateSituacao(doador, tipo, doacao_doador, doacao_entidade) {
+    await updateDocById(`doador/${doador}/${tipo}`, doacao_doador, { status: "Recebida" })
+    await updateDocById(`entidade/${user.uid}/${tipo}`, doacao_entidade, { status: "Recebida" }).then(() => {
+      Toast.success("Doação marcada como recebida!")
+    })
+    setTelaDetalhe(false)
+    setDoacaoSelecionada(null)
+    setAvaliacao(0)
+  }
 
   if (telaDetalhe && doacaoSelecionada) {
     return (
@@ -190,6 +201,13 @@ export default function Doacoes() {
               return null;
           }})()}
         </ScrollView>
+        {doacaoSelecionada.status !== "Recebida" && grupo !== "Doador" && (
+        <TouchableOpacity
+          style={[details.button, { marginBottom: -20, marginTop: 10,alignSelf: 'center' }]}
+          onPress={() => updateSituacao(doacaoSelecionada.doador_id, doacaoSelecionada.tipo.toLowerCase(), doacaoSelecionada.doa_id, doacaoSelecionada.id)}
+        >
+          <Text style={details.buttonText}>Doação recebida</Text>
+        </TouchableOpacity>)}
         <TouchableOpacity
           style={[details.button, { marginTop: 40, alignSelf: 'center' }]}
           onPress={() => setTelaDetalhe(false) || setDoacaoSelecionada(null) || setAvaliacao(0)}
@@ -221,6 +239,10 @@ export default function Doacoes() {
         </Text>
       ) : carregando ? (
         <ActivityIndicator size="large" style={{ marginTop: 50 }} />
+      ) : doacoes.length === 0 ?  (
+        <Text style={{ textAlign: "center", marginTop: 20 }}>
+          ⚠️ Nenhuma doação encontrada.
+        </Text>
       ) : (
         <FlatList
           data={filtrarDoacoes()}
@@ -234,7 +256,7 @@ export default function Doacoes() {
               }}
             >
               <View style={styles.card}>
-                <Text style={styles.nome}>{item.nome}</Text>
+                <Text style={styles.nome}>{grupo === "Doador" ? item.nome : item.id}</Text>
                 <Text style={styles.tipo}>{item.tipo}</Text>
                 <Text style={styles.valor}>Status: {item.status}</Text>
               </View>

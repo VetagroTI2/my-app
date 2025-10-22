@@ -8,7 +8,7 @@ import Perfil from './components/auth.jsx'
 import Doa from './components/doa.jsx'
 import HeaderNav from './components/headerNav.jsx'
 import Doacoes from './components/doacoes.jsx'
-import ToastManager, { Toast } from 'toastify-react-native'
+import ToastManager from 'toastify-react-native'
 
 import { AuthProvider } from './context/authContext.jsx'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -38,6 +38,7 @@ export default function App() {
           <Header/>
           <Doacoes/>
           <Menu setOpcao={setOpcao}/>
+          <ToastManager/>
         </AuthProvider>
       </SafeAreaView>
     )
