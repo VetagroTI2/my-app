@@ -3,7 +3,11 @@ import { useState, useEffect } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { getAllDocs } from "../firebase/crud";
 
+// Componente de mapa que exibe ONGs como marcadores
+// Recebe as funções setOpcao e setEntidade como props para navegação e seleção de entidade
 export default function Map({ setOpcao, setEntidade }) {
+  // Estados e variáveis
+  // Configuração inicial da região do mapa
   const initialRegion = {
     latitude: -3.71722,
     longitude: -38.54306,
@@ -17,15 +21,18 @@ export default function Map({ setOpcao, setEntidade }) {
   const [ongs, setOngs] = useState([]);
   const [ongSelecionada, setOngSelecionada] = useState(null);
 
+  // Limites de latitude e longitude para restringir o movimento do mapa
   const LAT_MIN = -3.9;
   const LAT_MAX = -3.5;
   const LON_MIN = -38.7;
   const LON_MAX = -38.3;
 
+  //Funcao restrige movimento do mapa aos limites definidos
   const handleRegionChange = (newRegion) => {
+    // Restringe latitude e longitude aos limites definidos
     let latitude = Math.min(Math.max(newRegion.latitude, LAT_MIN), LAT_MAX);
     let longitude = Math.min(Math.max(newRegion.longitude, LON_MIN), LON_MAX);
-
+    // Atualiza a região do mapa com os valores restritos
     setRegion({
       ...newRegion,
       latitude,
@@ -33,6 +40,7 @@ export default function Map({ setOpcao, setEntidade }) {
     });
   };
 
+  // Carrega os dados das ONGs ao montar o componente
   useEffect(() => {
     async function carregar() {
       const data = await getAllDocs("entidade");
@@ -48,7 +56,8 @@ export default function Map({ setOpcao, setEntidade }) {
         region={region}
         onRegionChangeComplete={handleRegionChange}
       >
-        {ongs.map((ong) => {
+        {// Renderiza um marcador para cada ONG com coordenadas válidas
+        ongs.map((ong) => {
           if (ong.geoloc && ong.geoloc.latitude != null && ong.geoloc.longitude != null) {
             return (
               <Marker

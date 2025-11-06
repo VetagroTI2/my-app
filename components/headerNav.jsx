@@ -1,5 +1,8 @@
 import { View, Image, StyleSheet, TouchableOpacity  } from 'react-native'
 
+// Componente de navegação do cabeçalho
+// Recebe a função setOpcao como prop para alterar a opção selecionada
+// quando o ícone de voltar é pressionado
 export default function HeaderNav({ setOpcao }){
     return (
         <View style={styles.container}>

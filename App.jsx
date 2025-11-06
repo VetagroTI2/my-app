@@ -1,3 +1,4 @@
+//*************** IMPORTAÇÕES ***************/
 import { useState } from 'react'
 
 import SearchBar from './components/searchbar.jsx'
@@ -13,12 +14,12 @@ import ToastManager from 'toastify-react-native'
 import { AuthProvider } from './context/authContext.jsx'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-
+//*************** COMPONENTE PRINCIPAL ***************/
 export default function App() {
-
+  //*************** ESTADOS ***************/
   const [opcao, setOpcao] = useState("Home")
   const [entidadeSelecionada, setEntidadeSelecionada] = useState("")
-
+  //*************** RENDERIZAÇÃO CONDICIONAL ***************/
   if (opcao === "Doar") {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
@@ -30,7 +31,7 @@ export default function App() {
       </SafeAreaView>
     )
   }
-
+  //*************** RENDERIZAÇÃO CONDICIONAL ***************/
   if (opcao === "Doações") {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
@@ -44,6 +45,7 @@ export default function App() {
     )
   }
 
+  //*************** RENDERIZAÇÃO CONDICIONAL ***************/
   if (opcao === "Perfil") {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
@@ -57,6 +59,7 @@ export default function App() {
     )
   }
 
+  //*************** RENDERIZAÇÃO CONDICIONAL ***************/
   if (opcao === "Home") {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>

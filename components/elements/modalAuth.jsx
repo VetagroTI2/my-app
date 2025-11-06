@@ -5,7 +5,7 @@ import { updateDocById, getDocById } from "../../firebase/crud";
 import { useAuth } from "../../context/authContext";
 import { Toast } from 'toastify-react-native'
 
-
+// Modal para atualizar dados do usuario autenticado.
 export default function AuthModal({ visible, onClose }) {
   const { user, grupo } = useAuth();
 
@@ -21,7 +21,9 @@ export default function AuthModal({ visible, onClose }) {
   // quando abrir o modal, carrega os dados do Firestore
   useEffect(() => {
     if (visible) {
+      //funcao que carrega os dados do usuario
       async function carregarDados() {
+        // busca os dados do usuario no Firestore dependendo do grupo
         const dados = await getDocById(grupo === "Doador" ? "doador" : "entidade", user.uid);
         if (dados) {
           setCampoLatitude(dados.geoloc?.latitude?.toString() || "");
@@ -37,9 +39,11 @@ export default function AuthModal({ visible, onClose }) {
     }
   }, [visible]);
 
+  // funcao que atualiza os dados do usuario
   async function updateEntidade() {
+    // cria o GeoPoint a partir dos campos de latitude e longitude
     let geo = new GeoPoint(Number(campoLatitude), Number(campoLongitude));
-
+    // cria o objeto com os dados
     const data = {
       geoloc: geo,
       horario: campoHorario,
@@ -48,7 +52,7 @@ export default function AuthModal({ visible, onClose }) {
       endereco: campoEndereco,
       bairro: campoBairro,
     };
-
+    // atualiza os dados no Firestore dependendo do grupo do usuario
     await updateDocById(grupo === "Doador" ? "doador" : "entidade", user.uid, data).then((param) =>
       param ? Toast.success("Atualizado com sucesso!") : null
     );
@@ -72,7 +76,8 @@ export default function AuthModal({ visible, onClose }) {
               value={campoBairro}
               onChangeText={setCampoBairro}
             />
-            { grupo === "Entidade/ONG" && (<>
+            {// campos adicionais apenas para Entidade/ONG
+            grupo === "Entidade/ONG" && (<>
               <Text style={styles.label}>Latitude</Text>
               <TextInput
                 style={styles.input}

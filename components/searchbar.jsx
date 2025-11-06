@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { View, TextInput, StyleSheet, Image } from 'react-native';
 
+// Componente de barra de busca
 export default function SearchBar() {
   const [search, setSearch] = useState("");
   return (

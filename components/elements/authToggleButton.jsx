@@ -1,5 +1,6 @@
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
+// Componente de botão de alternância para autenticação
 export default function ToggleButton({ label, selected, onSelect }) {
   return (
     <TouchableOpacity

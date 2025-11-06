@@ -1,3 +1,4 @@
+//*************** IMPORTAÇÕES ***************/
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native'
 import ToggleButton from './elements/doaToggleButton'
 import { useState } from 'react'
@@ -7,8 +8,9 @@ import { Timestamp } from 'firebase/firestore'
 import ListaComFormulario from './elements/doaFlatList'
 import { Toast } from 'toastify-react-native'
 
+//*************** COMPONENTE DA PÁGINA DE DOAÇÃO ***************/
 export default function Doa({ setOpcao, setEntidade }) {
-  
+  //*************** CONTEXTOS E ESTADOS GERAIS
   const { status, grupo, user } = useAuth()
   const dataHoje = new Date()
   const dataHojeTimestamp = Timestamp.fromDate(dataHoje)
@@ -43,14 +45,17 @@ export default function Doa({ setOpcao, setEntidade }) {
   /**/ const dadosPresencial = {itens: ['Brinquedo/2/usado/Bom pra crianças', 'Roupa/5/nova/peça feminina', 'arroz/1/novo/5kg'], tipo: "Presencial", nome: setEntidade?.nome, status: "Pendente", data_registro: dataHojeTimestamp, ong_id: setEntidade?.id }
   /***************CONSTANTES DA FORMA PRESENCIAL******************* */
 
+  //Função de adicionar a doação conforme a modalidade escolhida Fornecedor
   async function addFornecedor() {
     let ref = "doador/"+user.uid+"/fornecedor"
     await createRandomDoc(dadosFornecedor, ref).then(async(res) => {
       let ref = "entidade/"+setEntidade?.id+"/fornecedor"
       await createRandomDoc({...dadosFornecedor, doador_id: user.uid, doa_id: res.id}, ref)
     })
+
     setConfirmFornecedor(true)
   }
+  //Função de adicionar a doação conforme a modalidade escolhida Delivery
   async function addDelivery() {
     let ref = "doador/"+user.uid+"/delivery"
     await createRandomDoc(dadosDelivery, ref).then(async(res) => {
@@ -59,6 +64,7 @@ export default function Doa({ setOpcao, setEntidade }) {
     })
     setConfirmDelivery(true)
   }
+  //Função de adicionar a doação conforme a modalidade escolhida Transferência
   async function addTransferencia() {
     let ref = "doador/"+user.uid+"/transferencia"
     await createRandomDoc(dadosTransferencia, ref).then(async(res) => {
@@ -67,6 +73,7 @@ export default function Doa({ setOpcao, setEntidade }) {
     })
     setConfirmTransferencia(true)
   }
+  //Função de adicionar a doação conforme a modalidade escolhida Presencial
   async function addPresencial() {
     let ref = "doador/"+user.uid+"/presencial"
     await createRandomDoc(dadosPresencial, ref).then(async(res) => {
@@ -75,8 +82,9 @@ export default function Doa({ setOpcao, setEntidade }) {
     })
     setConfirmPresente(true)
   }
-
+  //Apos o usuario selecionar a modalidade de doação, renderiza a tela conforme a opção escolhida
   if (confirm && campoTipo === "presente") {
+    //Tela de confirmação de doação presencial
     if (confirmPresente) {
       return (
         <View style={styles.container}>
@@ -94,6 +102,7 @@ export default function Doa({ setOpcao, setEntidade }) {
         </View>
       )
     }
+    //Tela de cadastro de itens para doação presencial
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Cadastreos itens para doação:</Text>
@@ -107,9 +116,11 @@ export default function Doa({ setOpcao, setEntidade }) {
       </View>
     )
   }
-
+  //Tela de transferência
   if (confirm && campoTipo === "transfe") {
+    //Tela de confirmação de doação por transferência
     if (confirmPagamento) {
+      //Tela de confirmação de doação por transferência concluida
       if (confirmTransferencia) {
         return (
           <View style={styles.container}>
@@ -127,6 +138,7 @@ export default function Doa({ setOpcao, setEntidade }) {
           </View>
         )
       }
+      //Tela de resumo de doação por transferência antes de concluir
       return (
         <View style={pagar.container}>
           <View style={pagar.content}>
@@ -158,6 +170,7 @@ export default function Doa({ setOpcao, setEntidade }) {
       )
     }
     
+    //Tela de seleção de valor e forma de pagamento para transferência
     return (
       <View style={transf.container}>
         <Text style={transf.title}>
@@ -203,7 +216,9 @@ export default function Doa({ setOpcao, setEntidade }) {
     )
   }
 
+  //Tela de delivery
   if (confirm && campoTipo === "delivery") {
+    //Tela de confirmação de doação por delivery
     if (confirmDelivery) {
       return (
         <View style={styles.container}>
@@ -221,6 +236,7 @@ export default function Doa({ setOpcao, setEntidade }) {
         </View>
       )
     }
+    //Tela de seleção de empresa de delivery
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Fazer um pedido para "Nome da ONG/Entidade" </Text>
@@ -246,8 +262,9 @@ export default function Doa({ setOpcao, setEntidade }) {
       </View>
     )
   }
-
+  //Tela de fornecedor
   if (confirm && campoTipo === "fornecedor") {
+    //Tela de confirmação de doação por fornecedor
     if (confirmFornecedor) {
       return (
         <View style={styles.container}>
@@ -265,6 +282,7 @@ export default function Doa({ setOpcao, setEntidade }) {
         </View>
       )
     }
+    //Tela de seleção de fornecedor
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Fazer um pedido para "Nome da ONG/Entidade" </Text>
@@ -296,6 +314,7 @@ export default function Doa({ setOpcao, setEntidade }) {
     )
   }
 
+  //Tela inicial de seleção da modalidade de doação onde o usuário pode escolher entre as opções disponíveis
   return (
     <View style={styles.container}>
       <Text style={styles.title}>De qual maneira deseja fazer sua doação?</Text>

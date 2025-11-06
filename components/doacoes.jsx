@@ -4,44 +4,62 @@ import { getAllDocs, updateDocById } from "../firebase/crud";
 import { useAuth } from "../context/authContext.jsx";
 import { Toast } from 'toastify-react-native'
 
+// Componente principal de Doações
 export default function Doacoes() {
+  /// Estados e variáveis
   const { user, grupo } = useAuth()
   const [filtro, setFiltro] = useState("Todos")
   const [doacoes, setDoacoes] = useState([])
   const [carregando, setCarregando] = useState(true)
-
+  // Detalhes da doação
   const [telaDetalhe, setTelaDetalhe] = useState(false);
   const [doacaoSelecionada, setDoacaoSelecionada] = useState(null);
-
+  // Avaliação
   const [avaliacao, setAvaliacao] = useState(0)
   const estrelas = [1, 2, 3, 4, 5]
-
+  // Filtros
   const filtros = ["Todos", "Fornecedor", "Delivery", "Transferencia", "Presencial"];
 
+  // Carregar doações do usuário pegas no Firebase
   useEffect(() => {
     async function carregar() {
+      // Se não estiver logado, não carrega
       if (!user?.uid) return null
+      // Começa a carregar
       setCarregando(true)
+      // Tenta pegar as doações
       try {
+        // Nomes das subcoleções
         const subcolecoes = ["transferencia", "presencial", "delivery", "fornecedor"]
-
+        // Pega todas as doações de todas as subcoleções
         const resultados = await Promise.all(
+          // Para cada subcoleção, pega os documentos
           subcolecoes.map(async (nome) => {
+            // Pega os documentos
             const data = await getAllDocs(`${grupo === "Doador" ? "doador" : "entidade" }/${user.uid}/${nome}`)
+            // Adiciona o tipo de doação
             return data
           })
         )
+        // Junta todas as doações em uma única lista
         const todas = resultados.flat()
+        // Seta as doações no estado
         setDoacoes(todas)
+        //Caso gere erro, mostra no console
       } catch (error) {
+        // Mostra erro
         console.log("Erro ao carregar doações:", error)
       } finally {
+        // Termina de carregar
         setCarregando(false)
       }
     }
+    // Chama a função de carregar
     carregar();
+    // caso o usuário mude, recarrega as doações
   }, [user]);
 
+  // Função para filtrar e ordenar doações
   const filtrarDoacoes = () => {
     // Primeiro, filtra conforme o tipo
     let listaFiltrada =
@@ -59,31 +77,34 @@ export default function Doacoes() {
         : new Date(b.data_registro);
       return dataB - dataA; // ordem decrescente
     });
-
+    // Retorna a lista filtrada e ordenada
     return listaFiltrada;
   };
 
+  // Função para atualizar a situação da doação
   async function updateSituacao(doador, tipo, doacao_doador, doacao_entidade) {
+    // Atualiza a situação para "Recebida" em ambas as coleções (doador e entidade)
     await updateDocById(`doador/${doador}/${tipo}`, doacao_doador, { status: "Recebida" })
     await updateDocById(`entidade/${user.uid}/${tipo}`, doacao_entidade, { status: "Recebida" }).then(() => {
       Toast.success("Doação marcada como recebida!")
     })
+    // Fecha a tela de detalhes
     setTelaDetalhe(false)
     setDoacaoSelecionada(null)
     setAvaliacao(0)
   }
 
+  // Renderização da tela de detalhes
   if (telaDetalhe && doacaoSelecionada) {
+    // Retorna a tela de detalhes da doação selecionada
     return (
       <View style={details.container}>
         <View style={details.acoesContainer}>
           <TouchableOpacity style={details.acaoBotao}>
-            {/* <Icon name="report" size={24} color="#d9534f" /> */}
             <Text style={details.acaoTexto}>Suporte</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={details.acaoBotao}>
-            {/*<Icon name="contact-mail" size={24} color="#0275d8" />*/}
             <Text style={details.acaoTexto}>Contato</Text>
           </TouchableOpacity>
         </View>
@@ -100,7 +121,8 @@ export default function Doacoes() {
 
         <Text style={[details.label, { marginTop: 20 }]}>Avaliação:</Text>
         <View style={details.estrelasContainer}>
-          {estrelas.map((estrela) => (
+          {// Renderiza as estrelas para avaliação
+          estrelas.map((estrela) => (
             <TouchableOpacity key={estrela} onPress={() => setAvaliacao(estrela)}>
               <Text style={[details.estrela, estrela <= avaliacao && details.estrelaAtiva]}>
                 ★
@@ -110,12 +132,15 @@ export default function Doacoes() {
         </View>
         <Text style={[details.label, { marginTop: 20 }]}>Descrição:</Text>
         <ScrollView>
-          {(() =>{ switch (doacaoSelecionada.tipo) {
+          {// Renderiza os detalhes da doação
+          (() =>{ switch (doacaoSelecionada.tipo) {
+            // Detalhes para doações do tipo Fornecedor
             case "Fornecedor":
+              // Formata a data de registro e verifica se é válida
               let dataFormatada = doacaoSelecionada.data_registro?.toDate
                 ? doacaoSelecionada.data_registro.toDate().toLocaleDateString('pt-BR')
                 : 'Data inválida';
-
+              // Retorna os detalhes específicos para o tipo Fornecedor
               return (
                 <View style={details.container}>
                   <Text style={details.texto}>🏢 Empresa: {doacaoSelecionada.empresa}</Text>
@@ -124,11 +149,13 @@ export default function Doacoes() {
                   <Text style={details.texto}>📌 Situação: {doacaoSelecionada.situacao}</Text>
                 </View>
               );
+              // Detalhes para doações do tipo Delivery
             case "Delivery":
+              // Formata a data de registro e verifica se é válida
               let dataFormatoda = doacaoSelecionada.data_registro?.toDate
                 ? doacaoSelecionada.data_registro.toDate().toLocaleDateString('pt-BR')
                 : 'Data inválida';
-
+              // Retorna os detalhes específicos para o tipo Delivery
               return (
                 <View style={details.container}>
                   <Text style={details.texto}>🏢 Empresa: {doacaoSelecionada.empresa}</Text>
@@ -139,15 +166,17 @@ export default function Doacoes() {
                   <Text style={details.texto}>🔢 Placa: {doacaoSelecionada.placa}</Text>
                 </View>
               );
+              // Detalhes para doações do tipo Transferencia
             case "Transferencia":
+              // Calcula o valor com a taxa de 1,3%
               let valorOriginal = parseFloat(doacaoSelecionada.valor);
               let taxa = 0.013;
               let valorComTaxa = (valorOriginal * (1 + taxa)).toFixed(2);
-
+              // Formata a data de registro e verifica se é válida
               let dataRegistro = doacaoSelecionada.data_registro?.toDate
                 ? doacaoSelecionada.data_registro.toDate().toLocaleDateString('pt-BR')
                 : 'Data inválida';
-
+              // Retorna os detalhes específicos para o tipo Transferencia
               return (
                 <View style={details.container}>
                   <Text style={details.texto}>
@@ -173,10 +202,13 @@ export default function Doacoes() {
                   </Text>
                 </View>
               );
+              // Detalhes para doações do tipo Presencial
             case "Presencial":
+              // Retorna os detalhes específicos para o tipo Presencial
               return (
               <View style={presencialLista.container}>
-                {doacaoSelecionada.itens.map((item, index) => {
+                {// Mapeia os itens da doação e exibe suas informações
+                doacaoSelecionada.itens.map((item, index) => {
                   const [nome, quantidade, estado, descricao] = item.split('/');
                   return (
                     <View key={index} style={presencialLista.cell}>
@@ -197,11 +229,13 @@ export default function Doacoes() {
                 })}
               </View>
               )
+              // Caso o tipo não seja reconhecido
             default:
               return null;
           }})()}
         </ScrollView>
-        {doacaoSelecionada.status !== "Recebida" && grupo !== "Doador" && (
+        {// Botão para marcar a doação como recebida, se aplicável. Se o grupo for doador, ele não pode marcar a doação como recebida.
+        doacaoSelecionada.status !== "Recebida" && grupo !== "Doador" && (
         <TouchableOpacity
           style={[details.button, { marginBottom: -20, marginTop: 10,alignSelf: 'center' }]}
           onPress={() => updateSituacao(doacaoSelecionada.doador_id, doacaoSelecionada.tipo.toLowerCase(), doacaoSelecionada.doa_id, doacaoSelecionada.id)}
@@ -222,7 +256,8 @@ export default function Doacoes() {
     <View style={styles.container}>
       <View style={styles.filtros}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {filtros.map((item) => (
+          {// Renderiza os botões de filtro
+          filtros.map((item) => (
             <TouchableOpacity
               key={item}
               style={[styles.filtroBotao, filtro === item && styles.filtroAtivo]}
@@ -235,7 +270,12 @@ export default function Doacoes() {
           ))}
         </ScrollView>
       </View>
-      {!user?.uid ? (
+      {// Condicionalmente renderiza o conteúdo baseado no estado de autenticação e carregamento
+      // Se o usuário não estiver logado, mostra uma mensagem de aviso
+      // Se estiver carregando, mostra um indicador de atividade
+      // Se não houver doações, mostra uma mensagem de aviso
+      // Caso contrário, mostra a lista de doações filtradas
+      !user?.uid ? (
         <Text style={{ textAlign: "center", marginTop: 20 }}>
           ⚠️ Faça login para ver suas doações.
         </Text>

@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Ícones do Expo
 
+// Componente de lista com formulário para adicionar itens
+// Uso para modalidade de doacao Presencial
 export default function ListaComFormulario({ setLista }) {
   const [itens, setItens] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -19,9 +21,11 @@ export default function ListaComFormulario({ setLista }) {
   const [estado, setEstado] = useState("");
   const [descricao, setDescricao] = useState("");
 
+  // Atualiza a lista externa sempre que itens mudam
   const adicionarItem = () => {
+    // validação simples
     if (!nome || !quantidade) return; // validação simples
-
+    // cria novo item
     const novoItem = {
       id: Date.now().toString(),
       nome,
@@ -30,6 +34,7 @@ export default function ListaComFormulario({ setLista }) {
       descricao,
     };
 
+    // adiciona à lista
     setItens([...itens, novoItem]);
 
     // limpa e fecha modal
@@ -40,10 +45,12 @@ export default function ListaComFormulario({ setLista }) {
     setModalVisible(false);
   };
 
+  // Limpa a lista
   const limparLista = () => {
     setItens([]); // apaga todos os itens
   };
 
+  // Renderiza um item da lista
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Text style={styles.itemText}>
@@ -55,6 +62,7 @@ export default function ListaComFormulario({ setLista }) {
     </View>
   );
 
+  // Componente principal
   return (
     <View style={styles.container}>
       <View style={styles.header}>

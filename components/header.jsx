@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native'
 
+// Componente de cabeçalho simples com título
 export default function Header(){
     return (
         <View style={styles.container}>

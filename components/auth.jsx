@@ -1,3 +1,4 @@
+// components/auth.jsx
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator} from 'react-native'
 import { login, logout, registrar } from '../firebase/auth'
 import { useState } from 'react'
@@ -8,12 +9,13 @@ import { createDoc } from '../firebase/crud'
 import { Picker } from '@react-native-picker/picker'
 import { Toast } from 'toastify-react-native'
 
+// Componente de Perfil e Autenticação
 export default function Perfil() {
-
-    const { user, status } = useAuth()
-
+    //*************** CONTEXTOS E ESTADOS GERAIS
+    const { user, status, grupo } = useAuth()
+    
     const [tipoFormulario, setTipoFormulario] = useState("Entrar")
-
+    
     const [openModal, setOpenModal] = useState(false)
 
     const [carregar, setCarregar] = useState(false)
@@ -38,27 +40,35 @@ export default function Perfil() {
     /**/ const [campoSenhaConf, setCampoSenhaConf] = useState("")
     /*************************************************************/
 
+    //*************** FUNÇÕES DE ENVIO DE DADOS ***************/
     async function sendDataSignIn() {
+        // Inicia o carregamento
         setCarregar(true)
+        // Faz o login
         if (selectTipo !== "") {
+            // Faz o login
             await login(emailSignIn, passSignIn, selectTipo).then(() => setCarregar(false))
         } else {
+            // Exibe mensagem de erro se o tipo não for selecionado
             Toast.error("Selecione o tipo de usuário!")
             setCarregar(false)
         }
+        // Limpa os campos
         setEmailSignIn("")
         setPassSignIn("")
         setSelectTipo("") 
     }
 
+    // Função para enviar dados de registro
     async function sendDataRegister() {
+        // Cria os objetos com os dados do usuário
         const newUser = {
             campoTipo,
             campoEmail,
             campoSenha,
             campoSenhaConf
         };
-
+        // Cria o objeto com as informações adicionais do usuário
         const newInfoUsers = {
             bairro: campoBairro,
             cep: campoCep,
@@ -73,33 +83,35 @@ export default function Perfil() {
 
         // Valida se todas as informações obrigatórias foram preenchidas
         const allUserInfoFilled = Object.values(newInfoUsers).every(value => value);
+        // Se algum campo estiver vazio, exibe um aviso e sai da função
         if (!allUserInfoFilled) {
-            console.log("Preencha todos os campos obrigatórios!");
+            Toast.warn("Preencha todos os campos obrigatórios!");
             return; // Sai da função se faltar algum campo
         }
 
         // Valida se as senhas conferem
         if (newUser.campoSenha !== newUser.campoSenhaConf) {
-            console.log("As senhas não correspondem!");
+            Toast.error("As senhas não correspondem!");
             return;
         }
 
         try {
             // Registra o usuário
             const uid = await registrar(newUser.campoEmail, newUser.campoSenha, newUser.campoTipo);
-            console.log("Usuário registrado com sucesso! UID:", uid);
-
-            // Cria o documento no Firestore
+            Toast.success("Usuário registrado com sucesso!");
+            // Salva as informações adicionais no Firestore
             await createDoc(newInfoUsers, uid, newUser.campoTipo);
-            console.log("Dados adicionais salvos com sucesso!");
             
         } catch (error) {
+            // Exibe mensagem de erro em caso de falha
             console.error("Erro ao registrar usuário ou salvar dados:", error);
         }
     }
 
+    //*************** RENDERIZAÇÃO CONDICIONAL ***************/
     if (carregar) {
         return (
+            // Tela de carregamento e Exibe o indicador de carregamento
             <View style={styles.container}>
                 <ActivityIndicator size="large" style={{ marginTop: 50 }} />
             </View>
@@ -107,11 +119,12 @@ export default function Perfil() {
         )
     }
 
+    // Se o usuário estiver online, exibe as informações do perfil
     if (status === "online") {
         return (
         <View style={styles.container}>
             <View style={styles.form}>
-                <Text style={styles.label}>Usuário logado ✅</Text>
+                <Text style={styles.label}>{grupo} logado ✅</Text>
                 <Text style={styles.info}>UID: {user?.uid}</Text>
                 <Text style={styles.info}>Email: {user?.email}</Text>
                 <TouchableOpacity style={styles.button} onPress={() => setOpenModal(true)}>
@@ -130,6 +143,7 @@ export default function Perfil() {
         );
     }
 
+    // Se o usuário estiver offline, exibe o formulário de login ou registro
     if (status === "offline" && tipoFormulario === "Entrar") {
         return (
             <View style={styles.container}>
@@ -165,6 +179,7 @@ export default function Perfil() {
                 </Text>
             </View>
         )
+    // Formulário de Registro
     } else if (status === "offline" && tipoFormulario === "Registrar") {
         return (
             <View style={styles.container}>
@@ -247,6 +262,7 @@ export default function Perfil() {
     }
 }
 
+//*************** ESTILIZAÇÕES ***************/
 const styles = StyleSheet.create({
   container: {
     flex: 1,

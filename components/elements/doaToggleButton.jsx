@@ -1,6 +1,8 @@
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
+// Botao responsavel por renderizar cada opcao de doacao.
 export default function ToggleButton({ label, selected, onSelect, text }) {
+  // Renderiza o botao com estilos condicionalmente aplicados
   return (
     <TouchableOpacity
       style={[styles.item, selected && styles.selectedItem]}

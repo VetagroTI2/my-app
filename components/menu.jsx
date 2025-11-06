@@ -1,6 +1,10 @@
 import { View, StyleSheet, TouchableOpacity, Image  } from 'react-native'
 
+// Componente de menu inferior
+// Recebe a função setOpcao como prop para alterar a opção selecionada
 export default function Menu({ setOpcao }) {
+  // Renderiza o menu com botões para Home, Doações e Perfil
+  // Cada botão chama setOpcao com a opção correspondente ao ser pressionado
   return (
     <View style={styles.menu}>
       <TouchableOpacity style={styles.menuItem} onPress={() => setOpcao("Home")}>
