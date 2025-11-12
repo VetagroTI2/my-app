@@ -27,7 +27,7 @@ export default function Perfil() {
     /*****************************************************/ 
 
     //***************VARIAVEIS DE REGISTROS DE USUARIO
-    /**/ const [campoTipo, setCampoTipo] = useState("doador")
+    /**/ const [campoTipo, setCampoTipo] = useState("Doador")
     /**/ const [campoBairro, setCampoBairro] = useState("")
     /**/ const [campoCep, setCampoCep] = useState("")
     /**/ const [campoComp, setCampoComp] = useState("")
@@ -47,7 +47,9 @@ export default function Perfil() {
         // Faz o login
         if (selectTipo !== "") {
             // Faz o login
-            await login(emailSignIn, passSignIn, selectTipo).then(() => setCarregar(false))
+            await login(emailSignIn, passSignIn, selectTipo).then((param) => {
+                setCarregar(param)
+            })
         } else {
             // Exibe mensagem de erro se o tipo não for selecionado
             Toast.error("Selecione o tipo de usuário!")
@@ -61,6 +63,8 @@ export default function Perfil() {
 
     // Função para enviar dados de registro
     async function sendDataRegister() {
+        // Inicia o carregamento
+        setCarregar(true)
         // Cria os objetos com os dados do usuário
         const newUser = {
             campoTipo,
@@ -97,11 +101,14 @@ export default function Perfil() {
 
         try {
             // Registra o usuário
-            const uid = await registrar(newUser.campoEmail, newUser.campoSenha, newUser.campoTipo);
-            Toast.success("Usuário registrado com sucesso!");
+            const uid = await registrar(newUser.campoEmail, newUser.campoSenha)
             // Salva as informações adicionais no Firestore
-            await createDoc(newInfoUsers, uid, newUser.campoTipo);
-            
+            await createDoc(newInfoUsers, uid, newUser.campoTipo === "Doador" ? "doador" : "entidade").then(() => {
+                setTipoFormulario("Entrar")
+                setCarregar(false)
+                Toast.success("Usuário registrado com sucesso!")
+            })
+
         } catch (error) {
             // Exibe mensagem de erro em caso de falha
             console.error("Erro ao registrar usuário ou salvar dados:", error);
@@ -192,13 +199,13 @@ export default function Perfil() {
                         <Text style={styles.label}>Você é?</Text>
                         <ToggleButton
                             label="Doador"
-                            selected={campoTipo === "doador"}
-                            onSelect={() => setCampoTipo("doador")}
+                            selected={campoTipo === "Doador"}
+                            onSelect={() => setCampoTipo("Doador")}
                         />
                         <ToggleButton
                             label="Entidade/ONG"
-                            selected={campoTipo === "entidade"}
-                            onSelect={() => setCampoTipo("entidade")}
+                            selected={campoTipo === "Entidade/ONG"}
+                            onSelect={() => setCampoTipo("Entidade/ONG")}
                         />
                         <Text style={styles.label}>CPF ou CNPJ</Text>
                         <TextInput

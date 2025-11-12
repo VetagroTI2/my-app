@@ -98,7 +98,7 @@ export default function Map({ setOpcao, setEntidade }) {
               {"Horário de Funcionamento: "+ongSelecionada?.horario}
             </Text>
             <Text>
-              {"Tamanho/Porte: "+ongSelecionada?.tamanho}
+              {"Contato: "+ongSelecionada?.contato}
             </Text>
             <Text>
               {"Doação/Contribuição: "+ongSelecionada?.doacao}

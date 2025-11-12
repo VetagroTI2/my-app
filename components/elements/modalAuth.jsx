@@ -13,7 +13,7 @@ export default function AuthModal({ visible, onClose }) {
   const [campoLatitude, setCampoLatitude] = useState("");
   const [campoLongitude, setCampoLongitude] = useState("");
   const [campoHorario, setCampoHorario] = useState("");
-  const [campoTamanho, setCampoTamanho] = useState("");
+  const [campoContato, setCampoContato] = useState("");
   const [campoDoacoes, setCampoDoacoes] = useState("");
   const [campoEndereco, setCampoEndereco] = useState("");
   const [campoBairro, setCampoBairro] = useState("");
@@ -29,7 +29,7 @@ export default function AuthModal({ visible, onClose }) {
           setCampoLatitude(dados.geoloc?.latitude?.toString() || "");
           setCampoLongitude(dados.geoloc?.longitude?.toString() || "");
           setCampoHorario(dados.horario || "");
-          setCampoTamanho(dados.tamanho || "");
+          setCampoContato(dados.contato || "");
           setCampoDoacoes(dados.doacao || "");
           setCampoEndereco(dados.endereco || "");
           setCampoBairro(dados.bairro || "");
@@ -47,7 +47,7 @@ export default function AuthModal({ visible, onClose }) {
     const data = {
       geoloc: geo,
       horario: campoHorario,
-      tamanho: campoTamanho,
+      contato: campoContato,
       doacao: campoDoacoes,
       endereco: campoEndereco,
       bairro: campoBairro,
@@ -96,11 +96,11 @@ export default function AuthModal({ visible, onClose }) {
                 value={campoHorario}
                 onChangeText={setCampoHorario}
               />
-              <Text style={styles.label}>Tamanho</Text>
+              <Text style={styles.label}>Contato</Text>
               <TextInput
                 style={styles.input}
-                value={campoTamanho}
-                onChangeText={setCampoTamanho}
+                value={campoContato}
+                onChangeText={setCampoContato}
               />
               <Text style={styles.label}>Aceito doações de</Text>
               <TextInput
