@@ -1,11 +1,14 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 
 // Componente de cabeçalho simples com título
 export default function Header(){
     return (
         <View style={styles.container}>
             <View style={styles.title}>
-              <Text>MAPA DA SOLIDARIEDADE</Text>
+                <Image 
+                    source={require('../public/logo-app.jpg')} 
+                    style={{ width: "100%", height: 79, marginRight: 10, alignItems: "center", marginLeft: -10 }} 
+                />
             </View>
         </View>
     )
@@ -15,8 +18,8 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     alignItems: "center",
-    marginTop: 10,   // espaçamento suave depois do safe area
-    marginBottom: 10 // garante respiro antes do mapa
+    marginTop: 1,   // espaçamento suave depois do safe area
+    marginBottom: 1 // garante respiro antes do mapa
   },
   title: {
     width: "100%",
@@ -24,6 +27,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 25,
     borderColor: "#E6E6E6",
-    borderWidth: 0.5
+    borderWidth: 2
   },
 })

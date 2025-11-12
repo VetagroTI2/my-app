@@ -63,7 +63,7 @@ export default function App() {
   if (opcao === "Home") {
     return (
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
-        <SearchBar/>
+        <Header/>
         <Mapa setOpcao={setOpcao} setEntidade={setEntidadeSelecionada}/>
         <Menu setOpcao={setOpcao}/>
       </SafeAreaView>

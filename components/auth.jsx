@@ -252,10 +252,10 @@ export default function Perfil() {
                             onChangeText={setCampoSenhaConf}
                             secureTextEntry 
                         />
-                        <TouchableOpacity style={styles.button} onPress={() => sendDataRegister()}>
-                            <Text style={styles.buttonText}>Cadastrar</Text>
-                        </TouchableOpacity>
                     </ScrollView>
+                    <TouchableOpacity style={styles.button} onPress={() => sendDataRegister()}>
+                        <Text style={styles.buttonText}>Cadastrar</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
