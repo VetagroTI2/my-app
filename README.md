@@ -12,15 +12,26 @@
     </a>
 </p>
 
-[**PyGWalker**](https://github.com/Kanaries/pygwalker) can simplify your Jupyter Notebook data analysis and data visualization workflow, by turning your pandas dataframe into an interactive user interface for visual exploration.
+O applicativo **Mapa da Solidariedade** veio para tornar a praticida de ações socio-comunitária de maneira mais simples, transparente e mordena, fundindo o amor com a tecnologia.
 
-**PyGWalker** (pronounced like "Pig Walker", just for fun) is named as an abbreviation of "**Py**thon binding of **G**raphic **Walker**". It integrates Jupyter Notebook with [Graphic Walker](https://github.com/Kanaries/graphic-walker), an open-source alternative to Tableau. It allows data scientists to visualize / clean / annotates the data with simple drag-and-drop operations and even natural language queries.
+De inicio o principal objetivo é o registro de doações, de varias modalidades diferentes, e o acesso facilitado as informações de Entidades ou ONGs (Organizações Não Governamentadas) castradas por meio de um mapa interatiro para o usuário ou cidadão que deseja realizar sua doação.
+
+> [!NOTE]
+> Atualmente a versão do aplicativo segue modelo de POC (Prova de Conceito) para uso academico e material para apresentação durante a cadeira de extensão da faculdade.
      
+## 📋 Pré-Requisito
 
-https://github.com/Kanaries/pygwalker/assets/22167673/2b940e11-cf8b-4cde-b7f6-190fb10ee44b
+- **Node** v20.5.0
+- **React Native** v54.0
+- **Expo CLI** v19.0
 
-> [!TIP]
-> If you want more AI features, we also build [runcell](https://runcell.dev), an AI Code Agent in Jupyter that understands your code/data/cells and generate code, execute cells and take actions for you. It can be used in jupyter lab with `pip install runcell`
+## 🤝 Contribuindo
+
+### 1. Faça o clone do projeto
+
+```Bash
+git clone
+```
 
 
 
