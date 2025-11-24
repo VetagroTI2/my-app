@@ -30,7 +30,7 @@ De inicio o principal objetivo é o registro de doações, de varias modalidades
 ### 1. Faça o clone do projeto
 
 ```Bash
-git clone "http link"
+git clone "https://github.com/VetagroTI2/my-app.git"
 ```
 ### 2. Acesse a pasta do projeto
 
