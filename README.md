@@ -48,9 +48,14 @@ npm install
 npm start
 ```
 
-## Funcionalidades
+## 🔧 Funcionalidades
+- Cadastro de usuário e de entidades
+- Mapa interativo
+- Cadastro de doações por modalidade
+- Registro de doações realizadas
+- Classificação de doações
 
-https://github.com/user-attachments/assets/9ec64252-864d-4bd1-8755-83f9b0396d38
+
 
 
 
