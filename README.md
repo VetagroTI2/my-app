@@ -48,6 +48,7 @@ npm install
 npm start
 ```
 
+## Funcionalidades
 
 https://github.com/user-attachments/assets/9ec64252-864d-4bd1-8755-83f9b0396d38
 
