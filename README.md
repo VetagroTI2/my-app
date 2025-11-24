@@ -30,9 +30,23 @@ De inicio o principal objetivo é o registro de doações, de varias modalidades
 ### 1. Faça o clone do projeto
 
 ```Bash
-git clone
+git clone "http link"
+```
+### 2. Acesse a pasta do projeto
+
+```Bash
+cd /my-app
 ```
 
+### 3. Instalar as dependencias
+```
+npm install
+```
+
+### 4. Executar o projeto
+```
+npm start
+```
 
 
 https://github.com/user-attachments/assets/9ec64252-864d-4bd1-8755-83f9b0396d38
